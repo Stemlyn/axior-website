@@ -1,26 +1,143 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Night navy carries the brand; champagne gold is the single accent. */
+  --color-night: #070d1a;
+  --color-navy: #0b1830;
+  --color-navy-2: #14294a;
+  --color-gold: #c5a880;
+  --color-gold-2: #d6bf9b;
+  --color-gold-ink: #8a6d3f; /* gold for text on white (AA) */
+  --color-ink: #0b1220;
+  --color-muted: #5b6475;
+  --color-line: #e3e6eb;
+  --color-mist: #f4f5f7;
+  --color-emerald: #10b981;
+  --color-ok: #10b981;
+  --color-warn: #f59e0b;
+  --color-bad: #ef4444;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-padding-top: 6rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headlines: Instrument Serif. An italic phrase carries the emphasis; on dark it turns champagne. */
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 1.03;
+  text-wrap: balance;
+}
+.display em {
+  font-style: italic;
+}
+.dark .display em,
+.display.gold-em em {
+  color: var(--color-gold);
+}
+
+/* Small tracked label in sentence case, for figures and photo captions. */
+.kicker {
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+}
+
+/* Photo treatments */
+.scrim-bottom {
+  background: linear-gradient(180deg, rgba(7, 13, 26, 0) 30%, rgba(7, 13, 26, 0.55) 62%, rgba(7, 13, 26, 0.92) 100%);
+}
+.scrim-left {
+  background: linear-gradient(90deg, rgba(7, 13, 26, 0.94) 0%, rgba(7, 13, 26, 0.78) 38%, rgba(7, 13, 26, 0.35) 70%, rgba(7, 13, 26, 0.15) 100%);
+}
+
+/* Fine grain over dark panels so large navy areas don't look flat. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.dark :focus-visible,
+.bg-night :focus-visible,
+footer :focus-visible {
+  outline-color: var(--color-gold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Blog article body (rendered by lib/markdown.tsx) */
+.post-body {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+.post-body > * + * {
+  margin-top: 1.15em;
+}
+.post-body h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  line-height: 1.15;
+  margin-top: 1.8em;
+}
+.post-body h3 {
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-top: 1.5em;
+}
+.post-body ul {
+  list-style: disc;
+  padding-left: 1.3em;
+}
+.post-body ol {
+  list-style: decimal;
+  padding-left: 1.3em;
+}
+.post-body li + li {
+  margin-top: 0.4em;
+}
+.post-body blockquote {
+  border-left: 3px solid var(--color-gold);
+  padding: 0.2em 0 0.2em 1.1em;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  line-height: 1.35;
+}
+.post-body a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.post-body code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: rgba(11, 18, 32, 0.06);
 }
