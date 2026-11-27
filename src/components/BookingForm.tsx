@@ -209,8 +209,12 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
                       <span className="min-w-0 flex-1">
                         <span className="flex flex-wrap items-center gap-2">
                           <span className="font-semibold">{o.name}</span>
-                          {best && <span className="rounded-full bg-night px-2 py-0.5 text-[11px] font-semibold text-gold">Best fit for your {prop.short}</span>}
-                          {k === "pilot" && <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[11px] font-semibold text-gold-ink">Try us first</span>}
+                          {best && (
+                            <span className="whitespace-nowrap rounded-full bg-night px-2 py-0.5 text-[11px] font-semibold text-gold">
+                              Best fit<span className="max-sm:hidden"> for your {prop.short}</span>
+                            </span>
+                          )}
+                          {k === "pilot" && <span className="whitespace-nowrap rounded-full bg-gold/20 px-2 py-0.5 text-[11px] font-semibold text-gold-ink">Try us first</span>}
                         </span>
                         <span className="mt-0.5 block text-sm text-muted">{o.cadence}</span>
                       </span>
