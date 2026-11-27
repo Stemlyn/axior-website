@@ -63,6 +63,4 @@ export async function getPost(slug: string): Promise<Post | undefined> {
   return (await getPosts()).find((p) => p.slug === slug);
 }
 
-export function postDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" });
-}
+export { postDate } from "./post-format";

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { postDate, type Post } from "@/lib/blog";
+import type { Post } from "@/lib/blog";
+import { postDate } from "@/lib/post-format";
 import { readMinutes } from "@/lib/markdown";
 import { Shot } from "./Photo";
 import { cn } from "./ui";
