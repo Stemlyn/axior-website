@@ -42,3 +42,20 @@ Checked after the change: navbar still hides on scroll down (logo at −77 px) a
 | `/` | 264 KB, 12 scripts | 233 KB, 14 scripts |
 | `/services` | 265 KB | 234 KB |
 | `/audit` | 264 KB | 233 KB |
+
+## After (Task 9): same local Cloudflare Workers runtime for both, 375 px, warm unless noted
+
+`main` (e217b2f, before this work) on port 8791 vs this branch on 8792, `npx opennextjs-cloudflare build` + `wrangler dev`.
+
+| Page | Metric | Before (`main`) | After (branch) |
+|---|---|---|---|
+| `/` | First paint | 152–1,308 ms | 152–372 ms |
+| `/` | Main content (LCP) | **1,936 ms** warm, **3,128 ms** cold | **152 ms** warm |
+| `/` | Photos transferred | 426 KB | 181 KB (AVIF) |
+| `/` | Layout shift | 0 | 0 |
+| `/services` | LCP (warm) | 412 ms | 172–288 ms |
+| `/book` | LCP | 236 ms | 112 ms |
+| `/trust` | LCP (warm) | — | 172 ms |
+| all | First-load JS (gzipped, build) | 264 KB | 235 KB |
+
+Live-site numbers (incl. TTFB from Cloudflare's edge) are measured after deploy; deploy waits on the D1 database ID.
