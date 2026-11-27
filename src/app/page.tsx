@@ -273,7 +273,7 @@ export default function Home() {
 
       {/* Proof slots */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-3">
+        <Reveal stagger className="grid gap-4 md:grid-cols-3">
           <Slot title="Owner feedback from the Gulf">
             Two or three short quotes from pilot clients, with first name, city abroad and area (for example “Priya,
             Dubai, 2BHK in Kadri”). Only with written permission.
@@ -284,7 +284,7 @@ export default function Home() {
           <Slot title="Inspection count">
             A real running number, such as visits completed, once the pilot produces one.
           </Slot>
-        </div>
+        </Reveal>
       </section>
 
       <LatestPosts />

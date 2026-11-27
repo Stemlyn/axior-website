@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { MapPin } from "lucide-react";
-import { CtaBand, PageHeader } from "@/components/blocks";
+import { CtaBand, PageHeader, StaggerItem, StaggerList } from "@/components/blocks";
 import { FAQ } from "@/components/FAQ";
 import { JsonLd, faqSchema } from "@/components/JsonLdSchema";
 import { Shot } from "@/components/Photo";
@@ -63,9 +63,9 @@ export default function CoveragePage() {
           }
           intro="What each area is like, and what we pay most attention to there."
         />
-        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerList as="ul" className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {AREAS.map((a) => (
-            <li key={a.name} className="flex flex-col rounded-[1.5rem] border border-line p-6">
+            <StaggerItem as="li" key={a.name} className="flex flex-col rounded-[1.5rem] border border-line p-6">
               <MapPin className="size-5 text-gold-ink" strokeWidth={1.6} aria-hidden />
               <h3 className="display mt-4 text-3xl">{a.name}</h3>
               <p className="mt-1 text-sm text-muted">{a.kind}</p>
@@ -73,9 +73,9 @@ export default function CoveragePage() {
                 <span className="font-semibold">We watch: </span>
                 {a.watch.charAt(0).toLowerCase() + a.watch.slice(1)}
               </p>
-            </li>
+            </StaggerItem>
           ))}
-        </ul>
+        </StaggerList>
         <p className="mt-6 text-center text-sm text-muted">
           Also Kodialbail, Hampankatta, Kankanady, Urwa and the rest of the city.
         </p>

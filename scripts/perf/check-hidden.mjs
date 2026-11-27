@@ -29,9 +29,10 @@ try {
   await waitUp();
   for (const path of PAGES) {
     const html = await (await fetch(`http://127.0.0.1:${PORT}${path}`)).text();
-    const main = html.slice(html.indexOf('<main'));
+    const main = html.slice(html.indexOf("<main"));
     const start = main.indexOf("<section");
-    const section = main.slice(start, main.indexOf("</section>", start));
+    // Everything from <main> to the end of the first section: catches page-level wrappers too.
+    const section = main.slice(0, main.indexOf("</section>", start));
     const hidden = [...section.matchAll(/<([a-z0-9]+)[^>]*style="[^"]*opacity:\s*0(?![.\d])[^"]*"[^>]*>/gi)];
     for (const m of hidden) failures.push(`${path}: <${m[1]}> ${m[0].slice(0, 110)}…`);
   }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Building2, FileSignature, KeySquare, Lock, ScrollText, Video } from "lucide-react";
-import { CtaBand, PageHeader } from "@/components/blocks";
+import { CtaBand, PageHeader, StaggerItem, StaggerList } from "@/components/blocks";
 import { FAQ } from "@/components/FAQ";
 import { JsonLd, faqSchema } from "@/components/JsonLdSchema";
 import { SectionHead, Slot } from "@/components/ui";
@@ -63,18 +63,18 @@ export default function TrustPage() {
           }
           intro="Each layer covers a different failure: a lost key, a dishonest person, a forgotten handover."
         />
-        <ol className="mt-12 grid gap-4 md:grid-cols-3">
+        <StaggerList as="ol" className="mt-12 grid gap-4 md:grid-cols-3">
           {KEY_LAYERS.map(({ icon: Icon, title, body }, i) => (
-            <li key={title} className="rounded-[2rem] border border-line p-7">
+            <StaggerItem as="li" key={title} className="rounded-[2rem] border border-line p-7">
               <div className="flex items-center justify-between">
                 <Icon className="size-7 text-gold-ink" strokeWidth={1.4} aria-hidden />
                 <span className="display text-4xl text-line">{i + 1}</span>
               </div>
               <h3 className="display mt-6 text-3xl">{title}</h3>
               <p className="mt-3 leading-relaxed text-muted">{body}</p>
-            </li>
+            </StaggerItem>
           ))}
-        </ol>
+        </StaggerList>
       </section>
 
       <section id="video" className="px-4 sm:px-6">

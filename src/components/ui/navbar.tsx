@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, m, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { EASE_OUT } from "@/lib/motion";
 import { ArrowUpRight, Check, ChevronDown, Coins, Menu, X } from "lucide-react";
 import { CURRENCIES, PHOTOS, formatPrice, type PhotoKey, type PropertyType } from "@/lib/site";
 import { useSite, useWhatsappChat } from "@/lib/store";
@@ -138,7 +139,8 @@ const MENUS: MegaMenu[] = [
   },
 ];
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+// Shared site easing (src/lib/motion.ts).
+const EASE = EASE_OUT;
 const OPEN_DELAY = 90; // hover intent: ignore a cursor just passing over
 const CLOSE_DELAY = 220; // grace period when the cursor leaves the card
 
@@ -397,7 +399,7 @@ export default function AxiorNavbar() {
           <m.div
             ref={cardRef}
             layout={!reduce}
-            transition={{ duration: 0.35, ease: EASE }}
+            transition={{ duration: 0.25, ease: EASE }}
             className={cn(
               "relative rounded-3xl border bg-white/[0.97] transition-shadow duration-300",
               scrolled || anyOpen
@@ -509,7 +511,7 @@ export default function AxiorNavbar() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: reduce ? 0 : 0.35, ease: EASE }}
+                  transition={{ duration: reduce ? 0 : 0.25, ease: EASE }}
                   className="hidden overflow-hidden lg:block"
                 >
                   <AnimatePresence mode="wait" initial={false}>
@@ -598,7 +600,7 @@ export default function AxiorNavbar() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: reduce ? 0 : 0.3, ease: EASE }}
+                  transition={{ duration: reduce ? 0 : 0.25, ease: EASE }}
                   className="overflow-hidden lg:hidden"
                 >
                   <div className="max-h-[calc(100svh-6rem)] overflow-y-auto overscroll-contain border-t border-line/70 px-4 pb-5 pt-3 sm:px-6">
@@ -619,7 +621,13 @@ export default function AxiorNavbar() {
                     {MENUS.map((menu, i) => {
                       const isOpen = openIdx === i;
                       return (
-                        <div key={menu.href} className="border-b border-line/70">
+                        <m.div
+                          key={menu.href}
+                          className="border-b border-line/70"
+                          initial={reduce ? false : { opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25, delay: 0.04 * (i + 1), ease: EASE }}
+                        >
                           <button
                             onClick={() => setOpenIdx((o) => (o === i ? null : i))}
                             aria-expanded={isOpen}
@@ -636,7 +644,7 @@ export default function AxiorNavbar() {
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: reduce ? 0 : 0.25 }}
+                                transition={{ duration: reduce ? 0 : 0.2, ease: EASE }}
                                 className="overflow-hidden"
                               >
                                 <ul className="mb-4 ml-1 flex flex-col border-l border-line pl-4">
@@ -658,7 +666,7 @@ export default function AxiorNavbar() {
                               </m.div>
                             )}
                           </AnimatePresence>
-                        </div>
+                        </m.div>
                       );
                     })}
 

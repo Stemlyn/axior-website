@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { DUR, EASE_OUT } from "@/lib/motion";
 import { Check, CloudRain, Minus, Repeat } from "lucide-react";
 import { PROPERTIES, TIERS, formatPrice } from "@/lib/site";
 import { useSite } from "@/lib/store";
@@ -10,6 +12,7 @@ import { SectionHead, btn, cn } from "./ui";
 /** Property selector, recommendation and the three-tier grid. */
 export function PricingSection() {
   const { currency, property, setProperty, published } = useSite();
+  const reduce = useReducedMotion();
   const prop = PROPERTIES.find((p) => p.id === property)!;
   // Promotions switched off in the admin console hide the pilot banner or the credit line.
   const pilotOn = published?.promos.foundingPilot ?? true;
@@ -83,19 +86,35 @@ export function PricingSection() {
             <article
               key={t.key}
               className={cn(
-                "relative flex flex-col rounded-[2rem] border bg-white p-7",
+                "relative flex flex-col rounded-[2rem] border bg-white p-7 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 active:translate-y-0 active:scale-[0.99] motion-reduce:transform-none",
                 isRec ? "border-night shadow-[0_30px_60px_-30px_rgba(7,13,26,0.5)]" : "border-line",
               )}
             >
               {isRec && (
-                <span className="absolute -top-3 left-7 rounded-full bg-night px-3 py-1 text-xs font-semibold text-gold">
+                <m.span
+                  layoutId={reduce ? undefined : "best-fit"}
+                  transition={{ type: "spring", duration: 0.5, bounce: 0.15 }}
+                  className="absolute -top-3 left-7 rounded-full bg-night px-3 py-1 text-xs font-semibold text-gold"
+                >
                   Best fit for your {prop.short}
-                </span>
+                </m.span>
               )}
               <h3 className="display text-3xl">{t.name}</h3>
               <p className="mt-1 text-sm text-muted">{cadence(t.key)}</p>
               <p className="mt-6 flex items-baseline gap-1">
-                <span className="text-4xl font-semibold tracking-[-0.03em] tabular-nums">{formatPrice(t.key, currency, property, published)}</span>
+                <span className="relative inline-flex overflow-hidden text-4xl font-semibold tracking-[-0.03em] tabular-nums">
+                  <AnimatePresence mode="popLayout" initial={false}>
+                    <m.span
+                      key={`${property}-${currency}-${t.key}`}
+                      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, filter: "blur(2px)" }}
+                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                      exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                      transition={{ duration: DUR.fast, ease: EASE_OUT }}
+                    >
+                      {formatPrice(t.key, currency, property, published)}
+                    </m.span>
+                  </AnimatePresence>
+                </span>
                 <span className="text-muted">{t.per}</span>
               </p>
               <p className="mt-4 leading-relaxed text-muted">{t.summary}</p>

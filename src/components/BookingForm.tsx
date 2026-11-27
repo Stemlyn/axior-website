@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, m, useReducedMotion, type Variants } from "framer-motion";
+import { DUR, EASE_OUT } from "@/lib/motion";
 import { BadgeCheck, CalendarClock, Check, FileText, Repeat, Video } from "lucide-react";
 import { AREAS, PROPERTIES, formatPrice, planInfo, type PriceKey } from "@/lib/site";
 import { useSite, useWhatsappChat, useWhatsappNumber, whatsappLink } from "@/lib/store";
@@ -38,6 +40,18 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
   const priceLabel = `${price(plan)}${info.per}`;
 
   const [step, setStep] = useState(0);
+  const [dir, setDir] = useState(1);
+  const reduce = useReducedMotion();
+  const go = (n: number) => {
+    setDir(n > step ? 1 : -1);
+    setStep(n);
+  };
+  // Steps slide in the direction of travel (forward from the right, back from the left).
+  const slide: Variants = {
+    enter: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: 24 * d }),
+    center: { opacity: 1, x: 0, transition: { duration: 0.25, ease: EASE_OUT } },
+    exit: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: -24 * d, transition: { duration: 0.2, ease: EASE_OUT } }),
+  };
   const [building, setBuilding] = useState("");
   const [keys, setKeys] = useState<string | null>(null);
 
@@ -48,7 +62,7 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
 
   const option = (selected: boolean) =>
     cn(
-      "flex w-full items-center justify-between gap-4 rounded-xl border px-5 py-4 text-left transition-colors",
+      "flex w-full items-center justify-between gap-4 rounded-xl border px-5 py-4 text-left transition-[transform,border-color,background-color] duration-150 active:scale-[0.99] motion-reduce:transform-none",
       selected ? "border-night bg-mist font-semibold" : "border-line hover:border-ink/30",
     );
 
@@ -89,9 +103,20 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
           <p className="text-sm text-white/70">
             {info.name} · {prop.short}
           </p>
-          <p className="display mt-1 text-5xl">
-            {price(plan)}
-            {info.per && <span className="font-sans text-xl text-white/60">{info.per}</span>}
+          <p className="display relative mt-1 text-5xl">
+            <AnimatePresence mode="popLayout" initial={false}>
+              <m.span
+                key={`${plan}-${property}-${currency}`}
+                className="inline-block"
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10, filter: "blur(2px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+                transition={{ duration: DUR.fast, ease: EASE_OUT }}
+              >
+                {price(plan)}
+                {info.per && <span className="font-sans text-xl text-white/60">{info.per}</span>}
+              </m.span>
+            </AnimatePresence>
           </p>
           <p className="mt-2 text-sm text-white/70">
             {plan === "pilot" ? `Usually ${price("spot")} for a Spot Audit.` : `${info.cadence}. Billed in rupees.`}
@@ -117,11 +142,18 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
               <button
                 type="button"
                 disabled={i > step}
-                onClick={() => setStep(i)}
+                onClick={() => go(i)}
                 aria-current={i === step ? "step" : undefined}
                 className="min-h-11 w-full text-left disabled:cursor-default"
               >
-                <span className={cn("block h-1 rounded-full", i <= step ? "bg-gold" : "bg-line")} />
+                <span className="block h-1 overflow-hidden rounded-full bg-line">
+                  <span
+                    className={cn(
+                      "block h-full origin-left rounded-full bg-gold transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none",
+                      i <= step ? "scale-x-100" : "scale-x-0",
+                    )}
+                  />
+                </span>
                 <span className={cn("mt-2 block whitespace-nowrap text-[13px] sm:text-sm", i === step ? "font-semibold text-ink" : "text-muted")}>
                   <span className="max-sm:sr-only">{i + 1}. </span>
                   {s}
@@ -131,7 +163,9 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
           ))}
         </ol>
 
-        <div className="mt-8 min-h-[320px]">
+        <div className="relative -mx-2 mt-8 min-h-[320px] overflow-x-clip px-2">
+          <AnimatePresence mode="popLayout" initial={false} custom={dir}>
+            <m.div key={step} custom={dir} variants={slide} initial="enter" animate="center" exit="exit">
           {step === 0 && (
             <fieldset>
               <legend className="display text-3xl">What kind of property is it?</legend>
@@ -162,7 +196,7 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
                       onClick={() => setPick(k)}
                       aria-pressed={selected}
                       className={cn(
-                        "relative flex w-full items-start gap-4 rounded-xl border px-5 py-4 text-left transition-colors",
+                        "relative flex w-full items-start gap-4 rounded-xl border px-5 py-4 text-left transition-[transform,border-color,background-color] duration-150 active:scale-[0.99] motion-reduce:transform-none",
                         selected ? "border-night bg-mist" : "border-line hover:border-ink/30",
                       )}
                     >
@@ -170,7 +204,7 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
                         className={cn("mt-1 grid size-5 shrink-0 place-items-center rounded-full border", selected ? "border-night bg-night" : "border-line")}
                         aria-hidden
                       >
-                        {selected && <Check className="size-3 text-white" strokeWidth={3} />}
+                        <Check className={cn("size-3 text-white transition-[opacity,transform] duration-150", selected ? "scale-100 opacity-100" : "scale-75 opacity-0")} strokeWidth={3} />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="flex flex-wrap items-center gap-2">
@@ -235,18 +269,20 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
               </div>
             </fieldset>
           )}
+            </m.div>
+          </AnimatePresence>
         </div>
 
         <div className="mt-8 flex flex-col-reverse gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           {step > 0 ? (
-            <button type="button" onClick={() => setStep(step - 1)} className={cn(btn.base, btn.ghostDark)}>
+            <button type="button" onClick={() => go(step - 1)} className={cn(btn.base, btn.ghostDark)}>
               Back
             </button>
           ) : (
             <span />
           )}
           {step < STEPS.length - 1 ? (
-            <button type="button" disabled={!canNext} onClick={() => setStep(step + 1)} className={cn(btn.base, btn.dark, "disabled:opacity-40")}>
+            <button type="button" disabled={!canNext} onClick={() => go(step + 1)} className={cn(btn.base, btn.dark, "disabled:opacity-40")}>
               Continue
             </button>
           ) : (

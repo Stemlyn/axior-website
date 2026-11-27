@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Children, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
-import { m, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
+import { DUR, EASE_OUT, fadeUp, maskReveal, stagger, useScrollDepth } from "@/lib/motion";
 import { Camera, CheckCheck, Video } from "lucide-react";
 import { formatPrice, type PhotoKey, type PriceKey, type Severity } from "@/lib/site";
 import { useSite } from "@/lib/store";
@@ -53,21 +54,66 @@ export function DualClock({ className }: { className?: string }) {
 }
 
 /** Fades content up once as it enters the viewport. Use on a few key blocks, not everything. */
-export function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  stagger: staggered = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+  /** Reveal each direct child in turn (60 ms apart) instead of the block as one. */
+  stagger?: boolean;
+}) {
+  const view = { once: true, margin: "-10% 0px" } as const;
+  if (staggered) {
+    return (
+      <m.div className={className} variants={stagger(0.06, delay)} initial="hidden" whileInView="show" viewport={view}>
+        {Children.map(children, (child) => (child == null ? child : <m.div variants={fadeUp}>{child}</m.div>))}
+      </m.div>
+    );
+  }
   return (
     <m.div
       className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={view}
+      transition={{ duration: DUR.base, delay, ease: EASE_OUT }}
     >
       {children}
     </m.div>
   );
 }
 
-/** A photo that drifts slightly slower than the page as it scrolls past. */
+type ListTag = "ul" | "ol" | "div";
+const LIST = { ul: m.ul, ol: m.ol, div: m.div } as const;
+
+/** A grid or list whose items arrive one after another as it scrolls into view. Pair with StaggerItem. */
+export function StaggerList({ as = "div", className, children }: { as?: ListTag; className?: string; children: ReactNode }) {
+  const Tag = LIST[as];
+  return (
+    <Tag className={className} variants={stagger(0.06)} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-10% 0px" }}>
+      {children}
+    </Tag>
+  );
+}
+
+const ITEM = { li: m.li, div: m.div } as const;
+
+/** One item of a StaggerList (renders an li or div so list semantics stay intact). */
+export function StaggerItem({ as = "div", className, children }: { as?: "li" | "div"; className?: string; children: ReactNode }) {
+  const Tag = ITEM[as];
+  return (
+    <Tag className={className} variants={fadeUp}>
+      {children}
+    </Tag>
+  );
+}
+
+/** A photo that uncovers as it enters the view, then drifts slightly slower than the page as it scrolls past. */
 export function ParallaxShot({
   k,
   className,
@@ -81,14 +127,20 @@ export function ParallaxShot({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-6%", "6%"]);
+  const y = useScrollDepth(ref);
   return (
-    <div ref={ref} className={cn("relative overflow-hidden", className)}>
+    <m.div
+      ref={ref}
+      className={cn("relative overflow-hidden", className)}
+      variants={reduce ? undefined : maskReveal}
+      initial={reduce ? false : "hidden"}
+      whileInView="show"
+      viewport={{ once: true, margin: "-15% 0px" }}
+    >
       <m.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
         <Shot k={k} className="h-full w-full" sizes={sizes} position={position} />
       </m.div>
-    </div>
+    </m.div>
   );
 }
 
