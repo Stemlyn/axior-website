@@ -395,7 +395,8 @@ export default function AxiorNavbar() {
         transition={reduce ? { duration: 0 } : { duration: 0.35, ease: EASE }}
         onFocusCapture={() => setHidden(false)}
       >
-        <div className="pointer-events-auto w-full max-w-7xl" onMouseLeave={hoverLeave} onMouseEnter={clearTimer}>
+        {/* Card widens on very large screens so the tagline fits beside the full-length links and CTA. */}
+        <div className="pointer-events-auto w-full max-w-7xl min-[1680px]:max-w-[88rem]" onMouseLeave={hoverLeave} onMouseEnter={clearTimer}>
           <m.div
             ref={cardRef}
             layout={!reduce}
@@ -411,7 +412,7 @@ export default function AxiorNavbar() {
             <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:h-[4.5rem] lg:px-7">
               <Link href="/" className="-m-2 flex min-h-11 shrink-0 items-center gap-3 p-2 text-ink" aria-label="Axior home">
                 <Wordmark className="h-[17px] w-auto sm:h-[19px]" />
-                <span className="hidden border-l border-line pl-3 text-[11px] leading-tight text-muted 2xl:block">
+                <span className="hidden border-l border-line pl-3 text-[11px] leading-tight text-muted min-[1680px]:block">
                   Asset stewardship
                   <br />
                   Mangaluru
