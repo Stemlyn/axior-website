@@ -106,9 +106,9 @@ export function PricingSection() {
                   <AnimatePresence mode="popLayout" initial={false}>
                     <m.span
                       key={`${property}-${currency}-${t.key}`}
-                      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, filter: "blur(2px)" }}
+                      initial={{ opacity: 0, y: 8, filter: "blur(2px)" }}
                       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                      exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: DUR.fast, ease: EASE_OUT }}
                     >
                       {formatPrice(t.key, currency, property, published)}

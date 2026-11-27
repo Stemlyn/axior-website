@@ -21,4 +21,22 @@ if (bad.length) {
   console.error(`check-motion-imports: FAIL, import { motion } in: ${bad.join(", ")}`);
   process.exit(1);
 }
+
+// The server can't know prefers-reduced-motion (useReducedMotion() is null there, true/false in the
+// browser), so animation props that branch on it render different styles on server and client and
+// React never patches them: elements stay clipped or invisible. Reduced motion is handled globally
+// by <MotionConfig reducedMotion="user">; never branch initial/animate/exit/variants on it.
+const branchy = [];
+for (const f of files) {
+  readFileSync(f, "utf8")
+    .split("\n")
+    .forEach((line, i) => {
+      if (/\b(initial|animate|exit|variants|whileInView)=\{\s*reduce\s*\?/.test(line) || /^\s*(enter|exit|center|initial|animate)\s*:\s*\([^)]*\)\s*=>\s*\(?\s*reduce\s*\?/.test(line) || /entrance === "css"[\s\S]*?: reduce/.test(line) || /^\s*: reduce\s*$/.test(line))
+        branchy.push(`${f}:${i + 1}`);
+    });
+}
+if (branchy.length) {
+  console.error(`check-motion-imports: FAIL, animation props branch on reduced motion (server/client mismatch):\n  ${branchy.join("\n  ")}`);
+  process.exit(1);
+}
 console.log(`check-motion-imports: PASS (${files.length} files)`);

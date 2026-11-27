@@ -23,7 +23,7 @@ export function HomeHero() {
       <m.div
         className="absolute inset-0 -z-20"
         style={{ y: photoY }}
-        initial={reduce ? false : { scale: 1.08 }}
+        initial={{ scale: 1.08 }}
         animate={{ scale: 1 }}
         transition={{ duration: 2.4, ease: EASE_OUT }}
       >

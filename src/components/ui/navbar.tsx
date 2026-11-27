@@ -624,7 +624,7 @@ export default function AxiorNavbar() {
                         <m.div
                           key={menu.href}
                           className="border-b border-line/70"
-                          initial={reduce ? false : { opacity: 0, y: 8 }}
+                          initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.25, delay: 0.04 * (i + 1), ease: EASE }}
                         >

@@ -2,7 +2,7 @@
 
 import { Children, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
-import { m, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
 import { DUR, EASE_OUT, fadeUp, maskReveal, stagger, useScrollDepth } from "@/lib/motion";
 import { Camera, CheckCheck, Video } from "lucide-react";
 import { formatPrice, type PhotoKey, type PriceKey, type Severity } from "@/lib/site";
@@ -206,15 +206,12 @@ const REPORT: { status: Severity; text: string }[] = [
 
 /** The WhatsApp visit report as an owner sees it. */
 export function ReportCard({ className, entrance = "inView" }: { className?: string; entrance?: "css" | "inView" }) {
-  const reduce = useReducedMotion();
   // In the first screen the lines use the CSS entrance (painted without JavaScript); further down
   // the page they arrive as the card scrolls into view.
   const item = (i: number) =>
     entrance === "css"
       ? { style: riseAt(0.6 + i * 0.12, "6px") }
-      : reduce
-        ? {}
-        : {
+      : {
             initial: { opacity: 0, y: 6 },
             whileInView: { opacity: 1, y: 0 },
             viewport: { once: true, margin: "-60px" },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, m, useReducedMotion, type Variants } from "framer-motion";
+import { AnimatePresence, m, type Variants } from "framer-motion";
 import { DUR, EASE_OUT } from "@/lib/motion";
 import { BadgeCheck, CalendarClock, Check, FileText, Repeat, Video } from "lucide-react";
 import { AREAS, PROPERTIES, formatPrice, planInfo, type PriceKey } from "@/lib/site";
@@ -41,16 +41,15 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
 
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState(1);
-  const reduce = useReducedMotion();
   const go = (n: number) => {
     setDir(n > step ? 1 : -1);
     setStep(n);
   };
   // Steps slide in the direction of travel (forward from the right, back from the left).
   const slide: Variants = {
-    enter: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: 24 * d }),
+    enter: (d: number) => ({ opacity: 0, x: 24 * d }),
     center: { opacity: 1, x: 0, transition: { duration: 0.25, ease: EASE_OUT } },
-    exit: (d: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: -24 * d, transition: { duration: 0.2, ease: EASE_OUT } }),
+    exit: (d: number) => ({ opacity: 0, x: -24 * d, transition: { duration: 0.2, ease: EASE_OUT } }),
   };
   const [building, setBuilding] = useState("");
   const [keys, setKeys] = useState<string | null>(null);
@@ -108,9 +107,9 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
               <m.span
                 key={`${plan}-${property}-${currency}`}
                 className="inline-block"
-                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10, filter: "blur(2px)" }}
+                initial={{ opacity: 0, y: 10, filter: "blur(2px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: DUR.fast, ease: EASE_OUT }}
               >
                 {price(plan)}
