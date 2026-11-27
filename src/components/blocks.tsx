@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { m, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Camera, CheckCheck, Video } from "lucide-react";
 import { formatPrice, type PhotoKey, type PriceKey, type Severity } from "@/lib/site";
 import { useSite } from "@/lib/store";
@@ -55,7 +55,7 @@ export function DualClock({ className }: { className?: string }) {
 /** Fades content up once as it enters the viewport. Use on a few key blocks, not everything. */
 export function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   return (
-    <motion.div
+    <m.div
       className={className}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -63,7 +63,7 @@ export function Reveal({ children, className, delay = 0 }: { children: ReactNode
       transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -85,9 +85,9 @@ export function ParallaxShot({
   const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-6%", "6%"]);
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
+      <m.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
         <Shot k={k} className="h-full w-full" sizes={sizes} position={position} />
-      </motion.div>
+      </m.div>
     </div>
   );
 }
@@ -113,7 +113,7 @@ export function PageHeader({
       <Shot k={photo} priority className="absolute inset-0 -z-10 opacity-70" position={position} sizes="100vw" />
       <div className="scrim-left absolute inset-0 -z-10" />
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-36 sm:px-6 lg:min-h-[620px] lg:grid-cols-[1.1fr_auto] lg:px-8 lg:pb-24 lg:pt-40">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -122,16 +122,16 @@ export function PageHeader({
           <h1 className="display text-[2.9rem] sm:text-6xl lg:text-7xl">{title}</h1>
           <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75">{intro}</p>
           {children && <div className="mt-9">{children}</div>}
-        </motion.div>
+        </m.div>
         {aside && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="flex justify-center"
           >
             {aside}
-          </motion.div>
+          </m.div>
         )}
       </div>
     </section>
@@ -180,16 +180,16 @@ export function ReportCard({ className }: { className?: string }) {
         <p className="mt-0.5 text-xs text-muted">In 10:31 IST, out 11:24 IST (09:01 to 09:54 in Dubai)</p>
         <ul className="mt-3 space-y-2">
           {REPORT.map((r, i) => (
-            <motion.li key={r.text} {...item(i)} className="flex items-start gap-2.5">
+            <m.li key={r.text} {...item(i)} className="flex items-start gap-2.5">
               <span className="mt-1.5">
                 <StatusDot status={r.status} />
               </span>
               <span>{r.text}</span>
-            </motion.li>
+            </m.li>
           ))}
         </ul>
       </div>
-      <motion.div {...item(4)} className="mt-2 grid grid-cols-3 gap-1.5">
+      <m.div {...item(4)} className="mt-2 grid grid-cols-3 gap-1.5">
         {(
           [
             ["window", "Window seal", "10:42"],
@@ -207,8 +207,8 @@ export function ReportCard({ className }: { className?: string }) {
             </span>
           </div>
         ))}
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         {...item(5)}
         className="mt-2 flex items-center justify-between rounded-xl bg-mist px-3 py-2 text-xs text-muted"
       >
@@ -217,7 +217,7 @@ export function ReportCard({ className }: { className?: string }) {
           <span className="text-line" aria-hidden>|</span> Full visit 53 min
         </span>
         <CheckCheck className="size-4 text-sky-500" aria-label="Read" />
-      </motion.div>
+      </m.div>
     </div>
   );
 }

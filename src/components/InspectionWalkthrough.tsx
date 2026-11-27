@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { Camera } from "lucide-react";
 import { PILLARS, type Severity } from "@/lib/site";
 import { Shot } from "./Photo";
@@ -67,7 +67,7 @@ export function InspectionWalkthrough() {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={pillar.id}
             role="tabpanel"
             id={`panel-${pillar.id}`}
@@ -123,7 +123,7 @@ export function InspectionWalkthrough() {
               ))}
             </div>
             <p className="mt-3 text-xs text-muted">Illustrative photos. Your report carries the original, timestamped photos from your visit.</p>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </section>

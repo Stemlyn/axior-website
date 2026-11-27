@@ -34,3 +34,11 @@ Home also loaded: images 321 KB (3, w=750), fonts 70 KB (4 files), CSS 12 KB.
 | Mega panel / mobile drawer `height: auto` | layout, one-shot on an isolated fixed element | Kept for now; revisited in Task 8 (springs) |
 
 Checked after the change: navbar still hides on scroll down (logo at −77 px) and returns on scroll up (31 px).
+
+## First-load JavaScript (gzipped, from the production build; `node scripts/perf/js-size.mjs`)
+
+| Page | Before (Task 5 build) | After lazy motion (Task 6) |
+|---|---|---|
+| `/` | 264 KB, 12 scripts | 233 KB, 14 scripts |
+| `/services` | 265 KB | 234 KB |
+| `/audit` | 264 KB | 233 KB |
