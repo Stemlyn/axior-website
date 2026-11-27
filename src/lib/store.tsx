@@ -107,11 +107,12 @@ export function useSite() {
 export function whatsappLink(
   property: PropertyType,
   area: string,
-  extra?: { building?: string; keys?: string },
+  extra?: { building?: string; keys?: string; plan?: string },
   number: string = SITE.whatsapp,
 ) {
   const label = PROPERTIES.find((p) => p.id === property)?.label ?? "property";
-  let msg = `Hi Axior team, I own a ${label} in ${area}, Mangalore and would like to book a Founding Pilot Audit.`;
+  const article = /^[aeiou]/i.test(label) ? "an" : "a";
+  let msg = `Hi Axior team, I own ${article} ${label} in ${area}, Mangalore and would like to book ${extra?.plan ?? "a Founding Pilot Audit"}.`;
   if (extra?.building) msg += ` Building: ${extra.building}.`;
   if (extra?.keys) msg += ` Keys: ${extra.keys}.`;
   return `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;

@@ -18,7 +18,14 @@ interface D1 {
   prepare(sql: string): { all<T>(): Promise<{ results: T[] }> };
 }
 
+/**
+ * True only inside the Cloudflare Workers runtime. Outside it (next dev / next start on a laptop),
+ * getCloudflareContext would quietly start a local, empty D1 through wrangler instead.
+ */
+const onWorkers = () => typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+
 async function fromD1(): Promise<Published | null> {
+  if (!onWorkers()) return null;
   let db: D1 | undefined;
   try {
     const { env } = await getCloudflareContext({ async: true });

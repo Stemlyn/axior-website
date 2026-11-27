@@ -99,7 +99,7 @@ export function PricingSection() {
                 <span className="text-muted">{t.per}</span>
               </p>
               <p className="mt-4 leading-relaxed text-muted">{t.summary}</p>
-              <ul className="mt-6 space-y-3 border-t border-line pt-6">
+              <ul className="mb-8 mt-6 space-y-3 border-t border-line pt-6">
                 {t.includes.map((inc) => (
                   <li key={inc} className="flex gap-3 text-sm leading-relaxed">
                     <Check className="mt-0.5 size-4 shrink-0 text-ok" strokeWidth={2.5} aria-hidden />
@@ -107,6 +107,13 @@ export function PricingSection() {
                   </li>
                 ))}
               </ul>
+              <Link
+                href={`/book?plan=${t.key}`}
+                className={cn(btn.base, isRec ? btn.dark : btn.ghostDark, "mt-auto w-full justify-center")}
+                aria-label={`Choose ${t.name} for your ${prop.short}`}
+              >
+                Choose {t.name}
+              </Link>
             </article>
           );
         })}
@@ -123,7 +130,7 @@ export function PricingSection() {
               {creditOn && " Credited in full to your first month if you continue."}
             </p>
           </div>
-          <Link href="/book" className={cn(btn.base, btn.gold, "shrink-0")}>
+          <Link href="/book?plan=pilot" className={cn(btn.base, btn.gold, "shrink-0")}>
             Book the pilot audit
           </Link>
         </div>

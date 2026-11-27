@@ -259,7 +259,8 @@ export default function AxiorNavbar() {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const focusPanelOnOpen = useRef(false);
 
-  const pilot = formatPrice("pilot", currency, property, published);
+  // Lowest bookable price: the founding pilot, or the Spot Audit when the pilot is switched off.
+  const pilot = formatPrice(published?.promos.foundingPilot === false ? "spot" : "pilot", currency, property, published);
   const active = openIdx === null ? null : MENUS[openIdx];
   const anyOpen = openIdx !== null || mobileOpen;
 
@@ -467,16 +468,16 @@ export default function AxiorNavbar() {
                   href="/book"
                   className="flex h-10 items-center rounded-full bg-night px-4 text-sm font-semibold text-white transition-colors hover:bg-navy-2 xl:px-5"
                 >
-                  <span className="hidden xl:inline">Book Pilot Audit&nbsp;</span>
+                  <span className="hidden xl:inline">Book a visit&nbsp;</span>
                   <span className="xl:hidden">Book&nbsp;</span>
-                  <span className="text-gold">({pilot})</span>
+                  <span className="font-normal text-gold">· from {pilot}</span>
                 </Link>
               </div>
 
               {/* Mobile */}
               <div className="flex items-center gap-1.5 lg:hidden">
                 <Link href="/book" className="hidden h-10 items-center rounded-full bg-night px-4 text-[13px] font-semibold text-white sm:flex">
-                  Book&nbsp;<span className="text-gold">{pilot}</span>
+                  Book&nbsp;<span className="font-normal text-gold">· from {pilot}</span>
                 </Link>
                 <button
                   onClick={() => {
@@ -691,7 +692,7 @@ export default function AxiorNavbar() {
                         onClick={close}
                         className="flex h-12 items-center justify-center rounded-full bg-gold px-5 text-sm font-semibold text-night"
                       >
-                        Book Founding Pilot ({pilot})
+                        Book a visit or plan (from {pilot})
                       </Link>
                     </div>
                   </div>

@@ -271,6 +271,29 @@ export const TIERS: {
   },
 ];
 
+/** The founding pilot audit, offered as the first step before a monthly plan. */
+export const PILOT = {
+  key: "pilot" as const,
+  name: "Founding pilot audit",
+  cadence: "One visit, first-time clients",
+  per: "",
+  summary: "Your first full 30-point Spot Audit at the founding price, to see our work before choosing a plan.",
+};
+
+export const PLAN_KEYS: PriceKey[] = ["pilot", "spot", "essential", "vip"];
+
+export function isPlanKey(v: unknown): v is PriceKey {
+  return typeof v === "string" && (PLAN_KEYS as string[]).includes(v);
+}
+
+/** Plan name, visit cadence and price suffix, adjusted for the property (plots need fewer visits). */
+export function planInfo(key: PriceKey, property: PropertyType) {
+  const t = key === "pilot" ? PILOT : TIERS.find((x) => x.key === key)!;
+  const cadence =
+    property === "plot" && key === "essential" ? "1 visit a month" : property === "plot" && key === "vip" ? "2 visits a month" : t.cadence;
+  return { key, name: t.name, cadence, per: t.per, summary: t.summary };
+}
+
 export type Severity = "green" | "amber" | "red";
 
 export const PILLARS: {
