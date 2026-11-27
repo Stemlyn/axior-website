@@ -157,8 +157,20 @@ footer :focus-visible {
   animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--rise-delay, 0s);
 }
+/* For the page's largest text (what Google times as "main content visible"): slide without fading,
+   so it counts as painted on the first frame. */
+@keyframes rise-move {
+  from {
+    transform: translateY(var(--rise-y, 0.4em));
+  }
+}
+.rise-move {
+  animation: rise-move 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
 @media (prefers-reduced-motion: reduce) {
-  .rise {
+  .rise,
+  .rise-move {
     animation: none;
   }
 }

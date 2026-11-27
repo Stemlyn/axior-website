@@ -175,7 +175,7 @@ export function PageHeader({
           <h1 className="rise display text-[2.9rem] sm:text-6xl lg:text-7xl" style={riseAt(0.04)}>
             {title}
           </h1>
-          <p className="rise mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75" style={riseAt(0.12)}>
+          <p className="rise-move mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75" style={riseAt(0.12)}>
             {intro}
           </p>
           {children && (

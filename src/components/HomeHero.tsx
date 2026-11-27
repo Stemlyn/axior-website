@@ -49,7 +49,7 @@ export function HomeHero() {
               in Mangaluru.
             </span>
           </h1>
-          <p {...line(4)} className="rise mt-7 max-w-xl text-lg leading-relaxed text-white/75">
+          <p {...line(4)} className="rise-move mt-7 max-w-xl text-lg leading-relaxed text-white/75">
             Professional oversight for NRI-owned apartments, villas and plots in Bejai, Kadri, Falnir and across coastal
             Karnataka. Scheduled visits, a 30-point audit, and a photo report on WhatsApp within 24 hours.
           </p>
