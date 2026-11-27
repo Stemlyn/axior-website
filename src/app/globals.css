@@ -141,3 +141,24 @@ footer :focus-visible {
   border-radius: 4px;
   background: rgba(11, 18, 32, 0.06);
 }
+
+/*
+ * First-screen entrance in pure CSS, so text is painted on the first frame instead of waiting for
+ * JavaScript (see docs/superpowers/specs/2026-11-27-motion-and-mobile-speed-design.md).
+ * Stagger with style={{ "--rise-delay": "0.12s" }}; distance with --rise-y.
+ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 0.4em));
+  }
+}
+.rise {
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}

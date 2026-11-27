@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
 import { m, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Camera, CheckCheck, Video } from "lucide-react";
@@ -92,6 +92,11 @@ export function ParallaxShot({
   );
 }
 
+/** Inline style for the CSS `rise` entrance: delay in seconds, optional travel distance. */
+export function riseAt(delay: number, y?: string): CSSProperties {
+  return { "--rise-delay": `${delay}s`, ...(y ? { "--rise-y": y } : {}) } as CSSProperties;
+}
+
 /** Photo-backed dark header that opens every inner page. */
 export function PageHeader({
   title,
@@ -113,25 +118,24 @@ export function PageHeader({
       <Shot k={photo} priority className="absolute inset-0 -z-10 opacity-70" position={position} sizes="100vw" />
       <div className="scrim-left absolute inset-0 -z-10" />
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-36 sm:px-6 lg:min-h-[620px] lg:grid-cols-[1.1fr_auto] lg:px-8 lg:pb-24 lg:pt-40">
-        <m.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-2xl"
-        >
-          <h1 className="display text-[2.9rem] sm:text-6xl lg:text-7xl">{title}</h1>
-          <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75">{intro}</p>
-          {children && <div className="mt-9">{children}</div>}
-        </m.div>
+        {/* CSS entrance (globals.css `rise`): the title is painted on the first frame, no JavaScript needed. */}
+        <div className="max-w-2xl">
+          <h1 className="rise display text-[2.9rem] sm:text-6xl lg:text-7xl" style={riseAt(0.04)}>
+            {title}
+          </h1>
+          <p className="rise mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75" style={riseAt(0.12)}>
+            {intro}
+          </p>
+          {children && (
+            <div className="rise mt-9" style={riseAt(0.2)}>
+              {children}
+            </div>
+          )}
+        </div>
         {aside && (
-          <m.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="flex justify-center"
-          >
+          <div className="rise flex justify-center" style={riseAt(0.28, "32px")}>
             {aside}
-          </m.div>
+          </div>
         )}
       </div>
     </section>
@@ -146,17 +150,22 @@ const REPORT: { status: Severity; text: string }[] = [
 ];
 
 /** The WhatsApp visit report as an owner sees it. */
-export function ReportCard({ className }: { className?: string }) {
+export function ReportCard({ className, entrance = "inView" }: { className?: string; entrance?: "css" | "inView" }) {
   const reduce = useReducedMotion();
+  // In the first screen the lines use the CSS entrance (painted without JavaScript); further down
+  // the page they arrive as the card scrolls into view.
   const item = (i: number) =>
-    reduce
-      ? {}
-      : {
-          initial: { opacity: 0, y: 6 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, margin: "-60px" },
-          transition: { delay: 0.3 + i * 0.25, duration: 0.4 },
-        };
+    entrance === "css"
+      ? { style: riseAt(0.6 + i * 0.12, "6px") }
+      : reduce
+        ? {}
+        : {
+            initial: { opacity: 0, y: 6 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true, margin: "-60px" },
+            transition: { delay: 0.3 + i * 0.25, duration: 0.4 },
+          };
+  const rise = entrance === "css" && "rise";
 
   return (
     <div
@@ -180,7 +189,7 @@ export function ReportCard({ className }: { className?: string }) {
         <p className="mt-0.5 text-xs text-muted">In 10:31 IST, out 11:24 IST (09:01 to 09:54 in Dubai)</p>
         <ul className="mt-3 space-y-2">
           {REPORT.map((r, i) => (
-            <m.li key={r.text} {...item(i)} className="flex items-start gap-2.5">
+            <m.li key={r.text} {...item(i)} className={cn("flex items-start gap-2.5", rise)}>
               <span className="mt-1.5">
                 <StatusDot status={r.status} />
               </span>
@@ -189,7 +198,7 @@ export function ReportCard({ className }: { className?: string }) {
           ))}
         </ul>
       </div>
-      <m.div {...item(4)} className="mt-2 grid grid-cols-3 gap-1.5">
+      <m.div {...item(4)} className={cn("mt-2 grid grid-cols-3 gap-1.5", rise)}>
         {(
           [
             ["window", "Window seal", "10:42"],
@@ -210,7 +219,7 @@ export function ReportCard({ className }: { className?: string }) {
       </m.div>
       <m.div
         {...item(5)}
-        className="mt-2 flex items-center justify-between rounded-xl bg-mist px-3 py-2 text-xs text-muted"
+        className={cn("mt-2 flex items-center justify-between rounded-xl bg-mist px-3 py-2 text-xs text-muted", rise)}
       >
         <span className="flex items-center gap-1.5">
           <Video className="size-3.5" aria-hidden /> Narrated summary 2:04

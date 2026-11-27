@@ -39,7 +39,7 @@ export default function AuditPage() {
       <PageHeader
         photo="meter"
         position="center 40%"
-        aside={<ReportCard />}
+        aside={<ReportCard entrance="css" />}
         title={
           <>
             What you get, <em>a flight away.</em>
