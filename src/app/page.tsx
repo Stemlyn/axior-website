@@ -101,7 +101,7 @@ export default function Home() {
               Mangaluru is harder on an empty home than Bengaluru or Mumbai. These are the four things we find most.
             </p>
           </div>
-          <div className="mt-14 grid auto-rows-[minmax(220px,auto)] gap-4 md:grid-cols-4">
+          <div className="mt-14 grid gap-4 md:auto-rows-[minmax(220px,auto)] md:grid-cols-4">
             <Reveal className="dark relative isolate overflow-hidden rounded-[1.75rem] text-white md:col-span-2 md:row-span-2">
               <Shot k="window" className="absolute inset-0 -z-10" sizes="(min-width: 768px) 50vw, 100vw" />
               <div className="scrim-bottom absolute inset-0 -z-10" />
