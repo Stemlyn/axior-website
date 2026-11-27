@@ -126,21 +126,24 @@ export function ParallaxShot({
   position?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
   const y = useScrollDepth(ref);
+  // The outer element keeps the caller's classes (e.g. opacity-60 on CTA bands); the reveal animates
+  // an inner layer so its final opacity:1 never overrides them. No reduced-motion branch here: the
+  // server can't know the setting, and MotionConfig reducedMotion="user" already handles it.
   return (
-    <m.div
-      ref={ref}
-      className={cn("relative overflow-hidden", className)}
-      variants={reduce ? undefined : maskReveal}
-      initial={reduce ? false : "hidden"}
-      whileInView="show"
-      viewport={{ once: true, margin: "-15% 0px" }}
-    >
-      <m.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
-        <Shot k={k} className="h-full w-full" sizes={sizes} position={position} />
+    <div ref={ref} className={cn("relative overflow-hidden", className)}>
+      <m.div
+        className="absolute inset-0"
+        variants={maskReveal}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-15% 0px" }}
+      >
+        <m.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
+          <Shot k={k} className="h-full w-full" sizes={sizes} position={position} />
+        </m.div>
       </m.div>
-    </m.div>
+    </div>
   );
 }
 
