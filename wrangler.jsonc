@@ -19,13 +19,15 @@
   ],
   // Shared with the admin console (Workers & Pages > D1 > axior-db): same database_id in both.
   // The website only reads the published keys (pricing, site, blog); see src/lib/published.ts.
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "axior-db",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
-    }
-  ],
+  // D1 database binding: parked until axior-db exists (a placeholder ID fails the deploy).
+  // To enable: create axior-db in Workers & Pages > D1, put its ID below, uncomment, and push.
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "axior-db",
+  //     "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+  //   }
+  // ],
   "images": {
     "binding": "IMAGES"
   },
