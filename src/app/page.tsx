@@ -144,9 +144,9 @@ export default function Home() {
           </div>
           <Link
             href="/coverage"
-            className="mt-10 inline-flex min-h-11 items-center gap-2 font-semibold text-gold-ink transition-[gap] hover:gap-3"
+            className="group mt-10 inline-flex min-h-11 items-center gap-2 font-semibold text-gold-ink"
           >
-            Read the coastal climate guide <ArrowRight className="size-4" />
+            Read the coastal climate guide <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>
       </section>

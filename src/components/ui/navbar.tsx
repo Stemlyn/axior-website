@@ -284,12 +284,15 @@ export default function AxiorNavbar() {
 
   // Hide on scroll down, reveal on scroll up; add depth once off the top.
   const { scrollY } = useScroll();
+  // Runs every scroll frame, so React state is only touched when a value actually flips.
+  const flags = useRef({ scrolled: false, hidden: false });
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
-    setScrolled(y > 8);
+    const nextScrolled = y > 8;
+    if (nextScrolled !== flags.current.scrolled) setScrolled((flags.current.scrolled = nextScrolled));
     if (anyOpen) return;
-    if (y > prev && y > 140) setHidden(true);
-    else if (y < prev - 4 || y < 140) setHidden(false);
+    const nextHidden = y > prev && y > 140 ? true : y < prev - 4 || y < 140 ? false : flags.current.hidden;
+    if (nextHidden !== flags.current.hidden) setHidden((flags.current.hidden = nextHidden));
   });
 
   // Outside click and Escape.
@@ -375,7 +378,7 @@ export default function AxiorNavbar() {
           <motion.div
             key="nav-scrim"
             aria-hidden
-            className="fixed inset-0 z-40 bg-night/40 backdrop-blur-[2px]"
+            className="fixed inset-0 z-40 bg-night/45"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -396,7 +399,7 @@ export default function AxiorNavbar() {
             layout={!reduce}
             transition={{ duration: 0.35, ease: EASE }}
             className={cn(
-              "relative rounded-3xl border bg-white/95 backdrop-blur-xl transition-shadow duration-300",
+              "relative rounded-3xl border bg-white/[0.97] transition-shadow duration-300",
               scrolled || anyOpen
                 ? "border-white/70 shadow-[0_1px_2px_rgba(7,13,26,0.06),0_22px_48px_-16px_rgba(7,13,26,0.45)]"
                 : "border-white/50 shadow-[0_1px_2px_rgba(7,13,26,0.05),0_14px_32px_-14px_rgba(7,13,26,0.3)]",
@@ -551,9 +554,10 @@ export default function AxiorNavbar() {
                               <Link
                                 href={active.href}
                                 onClick={close}
-                                className="mt-1 inline-flex items-center gap-1 py-0.5 text-sm font-semibold text-gold-ink transition-[gap] hover:gap-2"
+                                className="group mt-1 inline-flex items-center gap-1 py-0.5 text-sm font-semibold text-gold-ink"
                               >
-                                Open {active.label} <ArrowUpRight className="size-4" aria-hidden />
+                                Open {active.label}{" "}
+                                <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
                               </Link>
                             </div>
                           )}

@@ -20,3 +20,17 @@ Home also loaded: images 321 KB (3, w=750), fonts 70 KB (4 files), CSS 12 KB.
    1   /coverage
    1   /services
    1   /trust
+
+## Motion-performance audit (Task 4, skill fixing-motion-performance)
+
+| Finding | Rule | Fix |
+|---|---|---|
+| Fixed navbar card had `backdrop-blur-xl` on a 95%-opaque white surface; the blur repainted on every scroll frame and during the card's layout animation, for no visible effect | blur: never on large surfaces | Removed blur; background `white/[0.97]` |
+| Full-viewport menu scrim faded in/out with `backdrop-blur-[2px]` | blur: never animate on large surfaces | Plain `bg-night/45` dim |
+| Navbar scroll handler called two `setState`s every scroll frame | scroll: no per-frame work | Values tracked in a ref; state set only when a flag flips |
+| "Read the coastal climate guide" and mega-panel "Open …" links animated `gap` on hover | mechanism: transform over layout | Arrow moves with `translate` instead |
+| Hero and `ParallaxShot` parallax | — | OK: framer-motion motion values, transform only, no React renders |
+| `Reveal` | — | OK: IntersectionObserver (`whileInView`), one-shot |
+| Mega panel / mobile drawer `height: auto` | layout, one-shot on an isolated fixed element | Kept for now; revisited in Task 8 (springs) |
+
+Checked after the change: navbar still hides on scroll down (logo at −77 px) and returns on scroll up (31 px).
