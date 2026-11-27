@@ -1,0 +1,29 @@
+# Starts a Cloudflare build of the latest main on every push, using a Cloudflare deploy hook.
+# Backup for Cloudflare's own GitHub trigger, which was not firing for pushes to this repo.
+# Setup: Cloudflare > axior-website > Settings > Deploy Hooks > add one for branch "main", then save
+# its URL as the repository secret CF_DEPLOY_HOOK. Without the secret this workflow does nothing.
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: cloudflare-deploy
+  cancel-in-progress: true
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare build
+        env:
+          HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "CF_DEPLOY_HOOK secret is not set; skipping."
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK" > /dev/null
+          echo "Cloudflare build triggered for ${GITHUB_SHA::7}."
