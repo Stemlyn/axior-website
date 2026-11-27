@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CtaBand, PageHeader, ReportCard } from "@/components/blocks";
+import { CtaBand, PageHeader, StaggerItem, StaggerList, ReportCard } from "@/components/blocks";
 import { InspectionWalkthrough } from "@/components/InspectionWalkthrough";
 import { SectionHead, Slot, StatusTag } from "@/components/ui";
 import type { Severity } from "@/lib/site";
@@ -39,7 +39,7 @@ export default function AuditPage() {
       <PageHeader
         photo="meter"
         position="center 40%"
-        aside={<ReportCard />}
+        aside={<ReportCard entrance="css" />}
         title={
           <>
             What you get, <em>a flight away.</em>
@@ -59,16 +59,16 @@ export default function AuditPage() {
           }
           intro="The flag tells you how soon to act. Catching amber early is how a ₹500 seal stays a ₹500 seal."
         />
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
+        <StaggerList as="div" className="mt-12 grid gap-4 md:grid-cols-3">
           {FLAGS.map((f) => (
-            <div key={f.status} className="flex flex-col rounded-[2rem] border border-line p-7">
+            <StaggerItem as="div" key={f.status} className="flex flex-col rounded-[2rem] border border-line p-7">
               <StatusTag status={f.status} className="self-start" />
               <h3 className="display mt-6 text-3xl">{f.title}</h3>
               <p className="mt-3 flex-1 leading-relaxed text-muted">{f.body}</p>
               <p className="mt-6 border-t border-line pt-4 text-sm font-semibold">{f.next}</p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerList>
       </section>
 
       <section className="mx-auto max-w-3xl px-4 sm:px-6">

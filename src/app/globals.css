@@ -141,3 +141,66 @@ footer :focus-visible {
   border-radius: 4px;
   background: rgba(11, 18, 32, 0.06);
 }
+
+/*
+ * First-screen entrance in pure CSS, so text is painted on the first frame instead of waiting for
+ * JavaScript (see docs/superpowers/specs/2026-11-27-motion-and-mobile-speed-design.md).
+ * Stagger with style={{ "--rise-delay": "0.12s" }}; distance with --rise-y.
+ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 0.4em));
+  }
+}
+.rise {
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+/* For the page's largest text (what Google times as "main content visible"): slide without fading,
+   so it counts as painted on the first frame. */
+@keyframes rise-move {
+  from {
+    transform: translateY(var(--rise-y, 0.4em));
+  }
+}
+.rise-move {
+  animation: rise-move 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .rise-move {
+    animation: none;
+  }
+}
+
+/* Page-to-page fade (app/template.tsx), in CSS so it never depends on the lazily loaded motion code. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.page-enter {
+  animation: page-enter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes page-enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: page-enter-fade 0.2s ease both;
+  }
+}
+
+/* If framer-motion's features fail to load (or are very late), content waiting for a scroll reveal
+   is shown as-is instead of staying hidden. Set by Providers.tsx; same rule as the <noscript> net. */
+.motion-fallback [style*="opacity:0"],
+.motion-fallback [style*="opacity: 0"] {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}

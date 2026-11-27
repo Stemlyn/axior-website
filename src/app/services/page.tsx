@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Check, Scale, X } from "lucide-react";
-import { CtaBand, PageHeader } from "@/components/blocks";
+import { CtaBand, PageHeader, StaggerItem, StaggerList } from "@/components/blocks";
 import { FAQ } from "@/components/FAQ";
 import { JsonLd, faqSchema } from "@/components/JsonLdSchema";
 import { ComparisonTable, PricingSection } from "@/components/PricingSection";
@@ -167,15 +167,15 @@ export default function ServicesPage() {
                 </div>
               </div>
             </div>
-            <ol className="grid gap-4 sm:grid-cols-2">
+            <StaggerList as="ol" className="grid gap-4 sm:grid-cols-2">
               {REPAIR_STEPS.map((step, i) => (
-                <li key={step.title} className="rounded-[1.5rem] bg-white p-6 ring-1 ring-line">
+                <StaggerItem as="li" key={step.title} className="rounded-[1.5rem] bg-white p-6 ring-1 ring-line">
                   <span className="display text-4xl text-gold-ink">{i + 1}</span>
                   <h3 className="mt-3 font-semibold">{step.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{step.body}</p>
-                </li>
+                </StaggerItem>
               ))}
-            </ol>
+            </StaggerList>
           </div>
         </div>
       </section>

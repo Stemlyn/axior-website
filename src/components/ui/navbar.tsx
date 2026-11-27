@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKe
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { AnimatePresence, m, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { EASE_OUT } from "@/lib/motion";
 import { ArrowUpRight, Check, ChevronDown, Coins, Menu, X } from "lucide-react";
 import { CURRENCIES, PHOTOS, formatPrice, type PhotoKey, type PropertyType } from "@/lib/site";
 import { useSite, useWhatsappChat } from "@/lib/store";
@@ -138,7 +139,8 @@ const MENUS: MegaMenu[] = [
   },
 ];
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+// Shared site easing (src/lib/motion.ts).
+const EASE = EASE_OUT;
 const OPEN_DELAY = 90; // hover intent: ignore a cursor just passing over
 const CLOSE_DELAY = 220; // grace period when the cursor leaves the card
 
@@ -203,7 +205,7 @@ function CurrencyMenu({ onOpen }: { onOpen: () => void }) {
       </button>
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             id="currency-menu"
             initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -235,7 +237,7 @@ function CurrencyMenu({ onOpen }: { onOpen: () => void }) {
             <p className="px-3 pb-1.5 pt-2 text-[11px] leading-snug text-muted">
               Set from your location. Billed in INR; other figures are approximate.
             </p>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>
@@ -284,12 +286,15 @@ export default function AxiorNavbar() {
 
   // Hide on scroll down, reveal on scroll up; add depth once off the top.
   const { scrollY } = useScroll();
+  // Runs every scroll frame, so React state is only touched when a value actually flips.
+  const flags = useRef({ scrolled: false, hidden: false });
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
-    setScrolled(y > 8);
+    const nextScrolled = y > 8;
+    if (nextScrolled !== flags.current.scrolled) setScrolled((flags.current.scrolled = nextScrolled));
     if (anyOpen) return;
-    if (y > prev && y > 140) setHidden(true);
-    else if (y < prev - 4 || y < 140) setHidden(false);
+    const nextHidden = y > prev && y > 140 ? true : y < prev - 4 || y < 140 ? false : flags.current.hidden;
+    if (nextHidden !== flags.current.hidden) setHidden((flags.current.hidden = nextHidden));
   });
 
   // Outside click and Escape.
@@ -372,10 +377,10 @@ export default function AxiorNavbar() {
       {/* Dims the page while a panel or the mobile menu is open. */}
       <AnimatePresence>
         {anyOpen && (
-          <motion.div
+          <m.div
             key="nav-scrim"
             aria-hidden
-            className="fixed inset-0 z-40 bg-night/40 backdrop-blur-[2px]"
+            className="fixed inset-0 z-40 bg-night/45"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -384,19 +389,19 @@ export default function AxiorNavbar() {
         )}
       </AnimatePresence>
 
-      <motion.header
+      <m.header
         className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
         animate={{ y: hidden && !anyOpen ? "-120%" : "0%" }}
         transition={reduce ? { duration: 0 } : { duration: 0.35, ease: EASE }}
         onFocusCapture={() => setHidden(false)}
       >
         <div className="pointer-events-auto w-full max-w-7xl" onMouseLeave={hoverLeave} onMouseEnter={clearTimer}>
-          <motion.div
+          <m.div
             ref={cardRef}
             layout={!reduce}
-            transition={{ duration: 0.35, ease: EASE }}
+            transition={{ duration: 0.25, ease: EASE }}
             className={cn(
-              "relative rounded-3xl border bg-white/95 backdrop-blur-xl transition-shadow duration-300",
+              "relative rounded-3xl border bg-white/[0.97] transition-shadow duration-300",
               scrolled || anyOpen
                 ? "border-white/70 shadow-[0_1px_2px_rgba(7,13,26,0.06),0_22px_48px_-16px_rgba(7,13,26,0.45)]"
                 : "border-white/50 shadow-[0_1px_2px_rgba(7,13,26,0.05),0_14px_32px_-14px_rgba(7,13,26,0.3)]",
@@ -404,7 +409,7 @@ export default function AxiorNavbar() {
           >
             {/* Top row */}
             <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:h-[4.5rem] lg:px-7">
-              <Link href="/" className="-m-2 flex shrink-0 items-center gap-3 p-2 text-ink" aria-label="Axior home">
+              <Link href="/" className="-m-2 flex min-h-11 shrink-0 items-center gap-3 p-2 text-ink" aria-label="Axior home">
                 <Wordmark className="h-[17px] w-auto sm:h-[19px]" />
                 <span className="hidden border-l border-line pl-3 text-[11px] leading-tight text-muted 2xl:block">
                   Asset stewardship
@@ -416,11 +421,11 @@ export default function AxiorNavbar() {
               {/* Desktop items */}
               <nav aria-label="Main" className="hidden lg:block">
                 <ul className="flex items-center gap-0.5">
-                  {MENUS.map((m, i) => {
+                  {MENUS.map((menu, i) => {
                     const isOpen = openIdx === i;
-                    const current = path === m.href;
+                    const current = path === menu.href;
                     return (
-                      <li key={m.href} onMouseEnter={() => hoverOpen(i)}>
+                      <li key={menu.href} onMouseEnter={() => hoverOpen(i)}>
                         <button
                           ref={(el) => {
                             triggerRefs.current[i] = el;
@@ -435,8 +440,8 @@ export default function AxiorNavbar() {
                             isOpen ? "bg-mist text-ink" : current ? "text-ink hover:bg-mist/70" : "text-muted hover:bg-mist/70 hover:text-ink",
                           )}
                         >
-                          <span className="xl:hidden">{m.short}</span>
-                          <span className="hidden xl:inline">{m.label}</span>
+                          <span className="xl:hidden">{menu.short}</span>
+                          <span className="hidden xl:inline">{menu.label}</span>
                           <ChevronDown
                             className={cn("size-4 transition-transform duration-300", isOpen && "rotate-180")}
                             aria-hidden
@@ -497,7 +502,7 @@ export default function AxiorNavbar() {
             {/* Desktop mega panel: the container animates height once; content swaps in place. */}
             <AnimatePresence initial={false}>
               {active && (
-                <motion.div
+                <m.div
                   key="mega"
                   id="mega-panel"
                   ref={panelRef}
@@ -506,11 +511,11 @@ export default function AxiorNavbar() {
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: reduce ? 0 : 0.35, ease: EASE }}
+                  transition={{ duration: reduce ? 0 : 0.25, ease: EASE }}
                   className="hidden overflow-hidden lg:block"
                 >
                   <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
+                    <m.div
                       key={active.href}
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -551,9 +556,10 @@ export default function AxiorNavbar() {
                               <Link
                                 href={active.href}
                                 onClick={close}
-                                className="mt-1 inline-flex items-center gap-1 py-0.5 text-sm font-semibold text-gold-ink transition-[gap] hover:gap-2"
+                                className="group mt-1 inline-flex items-center gap-1 py-0.5 text-sm font-semibold text-gold-ink"
                               >
-                                Open {active.label} <ArrowUpRight className="size-4" aria-hidden />
+                                Open {active.label}{" "}
+                                <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
                               </Link>
                             </div>
                           )}
@@ -578,23 +584,23 @@ export default function AxiorNavbar() {
                           <p className="display text-xl text-white">{active.caption}</p>
                         </div>
                       </Link>
-                    </motion.div>
+                    </m.div>
                   </AnimatePresence>
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
 
             {/* Mobile menu */}
             <AnimatePresence initial={false}>
               {mobileOpen && (
-                <motion.nav
+                <m.nav
                   key="mobile"
                   id="mobile-menu"
                   aria-label="Main"
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: reduce ? 0 : 0.3, ease: EASE }}
+                  transition={{ duration: reduce ? 0 : 0.25, ease: EASE }}
                   className="overflow-hidden lg:hidden"
                 >
                   <div className="max-h-[calc(100svh-6rem)] overflow-y-auto overscroll-contain border-t border-line/70 px-4 pb-5 pt-3 sm:px-6">
@@ -612,31 +618,37 @@ export default function AxiorNavbar() {
                     <Link href="/" onClick={close} className="display block border-b border-line/70 py-3.5 text-[1.55rem]">
                       Home
                     </Link>
-                    {MENUS.map((m, i) => {
+                    {MENUS.map((menu, i) => {
                       const isOpen = openIdx === i;
                       return (
-                        <div key={m.href} className="border-b border-line/70">
+                        <m.div
+                          key={menu.href}
+                          className="border-b border-line/70"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25, delay: 0.04 * (i + 1), ease: EASE }}
+                        >
                           <button
                             onClick={() => setOpenIdx((o) => (o === i ? null : i))}
                             aria-expanded={isOpen}
                             aria-controls={`m-sub-${i}`}
                             className="flex w-full items-center justify-between py-3.5 text-left"
                           >
-                            <span className={cn("display text-[1.55rem]", path === m.href && "text-gold-ink")}>{m.label}</span>
+                            <span className={cn("display text-[1.55rem]", path === menu.href && "text-gold-ink")}>{menu.label}</span>
                             <ChevronDown className={cn("size-4 text-muted transition-transform", isOpen && "rotate-180")} aria-hidden />
                           </button>
                           <AnimatePresence initial={false}>
                             {isOpen && (
-                              <motion.div
+                              <m.div
                                 id={`m-sub-${i}`}
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: reduce ? 0 : 0.25 }}
+                                transition={{ duration: reduce ? 0 : 0.2, ease: EASE }}
                                 className="overflow-hidden"
                               >
                                 <ul className="mb-4 ml-1 flex flex-col border-l border-line pl-4">
-                                  {m.columns.flatMap((c) =>
+                                  {menu.columns.flatMap((c) =>
                                     c.links.map((l) => (
                                       <li key={l.label}>
                                         <Link href={l.href} onClick={() => pick(l)} className="block py-1.5 text-[15px] text-muted">
@@ -646,15 +658,15 @@ export default function AxiorNavbar() {
                                     )),
                                   )}
                                   <li>
-                                    <Link href={m.href} onClick={close} className="block py-1.5 text-[15px] font-semibold text-gold-ink">
-                                      Open {m.label}
+                                    <Link href={menu.href} onClick={close} className="block py-1.5 text-[15px] font-semibold text-gold-ink">
+                                      Open {menu.label}
                                     </Link>
                                   </li>
                                 </ul>
-                              </motion.div>
+                              </m.div>
                             )}
                           </AnimatePresence>
-                        </div>
+                        </m.div>
                       );
                     })}
 
@@ -696,12 +708,12 @@ export default function AxiorNavbar() {
                       </Link>
                     </div>
                   </div>
-                </motion.nav>
+                </m.nav>
               )}
             </AnimatePresence>
-          </motion.div>
+          </m.div>
         </div>
-      </motion.header>
+      </m.header>
     </>
   );
 }

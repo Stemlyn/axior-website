@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Camera } from "lucide-react";
 import { PILLARS, type Severity } from "@/lib/site";
 import { Shot } from "./Photo";
@@ -24,7 +24,6 @@ const SHORT: Record<string, string> = {
 
 export function InspectionWalkthrough() {
   const [active, setActive] = useState(PILLARS[0].id);
-  const reduce = useReducedMotion();
   const pillar = PILLARS.find((p) => p.id === active)!;
   const total = PILLARS.reduce((n, p) => n + p.points.length, 0);
   const c = counts(pillar.points);
@@ -56,7 +55,7 @@ export function InspectionWalkthrough() {
                 aria-controls={`panel-${p.id}`}
                 onClick={() => setActive(p.id)}
                 className={cn(
-                  "shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition-colors",
+                  "min-h-11 shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition-colors",
                   selected ? "bg-navy text-white" : "text-muted hover:text-ink",
                 )}
               >
@@ -67,14 +66,14 @@ export function InspectionWalkthrough() {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={pillar.id}
             role="tabpanel"
             id={`panel-${pillar.id}`}
             aria-labelledby={`tab-${pillar.id}`}
-            initial={reduce ? false : { opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.2 }}
             className="mt-6 rounded-[2rem] bg-white p-5 sm:p-8"
           >
@@ -123,7 +122,7 @@ export function InspectionWalkthrough() {
               ))}
             </div>
             <p className="mt-3 text-xs text-muted">Illustrative photos. Your report carries the original, timestamped photos from your visit.</p>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </section>

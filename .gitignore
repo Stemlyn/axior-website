@@ -47,3 +47,7 @@ next-env.d.ts
 /.open-next/
 /.wrangler/
 .dev.vars*
+
+# superpowers plan workspaces
+/.superpowers/
+.gstack/

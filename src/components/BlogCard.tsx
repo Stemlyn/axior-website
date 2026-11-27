@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { postDate, type Post } from "@/lib/blog";
+import type { Post } from "@/lib/blog";
+import { postDate } from "@/lib/post-format";
 import { readMinutes } from "@/lib/markdown";
 import { Shot } from "./Photo";
 import { cn } from "./ui";
@@ -11,7 +12,7 @@ export function BlogCard({ post, feature = false }: { post: Post; feature?: bool
     <Link
       href={`/blog/${post.slug}`}
       className={cn(
-        "group flex flex-col overflow-hidden rounded-[1.75rem] border border-line bg-white transition-shadow hover:shadow-[0_20px_50px_-24px_rgba(7,13,26,0.35)]",
+        "group flex flex-col overflow-hidden rounded-[1.75rem] border border-line bg-white hover:shadow-[0_20px_50px_-24px_rgba(7,13,26,0.35)] transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 active:translate-y-0 active:scale-[0.99] motion-reduce:transform-none",
         feature && "md:col-span-2 lg:grid lg:grid-cols-[1.15fr_1fr]",
       )}
     >

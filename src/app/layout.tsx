@@ -48,6 +48,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${manrope.variable} ${instrument.variable}`}>
       <body>
+        {/* Without JavaScript, nothing waits for an entrance animation: show it all as-is. */}
+        <noscript>
+          <style>{"[style*='opacity:0']{opacity:1!important;transform:none!important;clip-path:none!important}"}</style>
+        </noscript>
         <JsonLd data={organizationSchema} />
         <Providers>
           <AxiorNavbar />

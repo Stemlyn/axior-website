@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { PHOTO_BLUR } from "@/lib/photo-blur";
 import { PHOTOS, type PhotoKey } from "@/lib/site";
 import { cn } from "./ui";
 
@@ -30,6 +31,8 @@ export function Shot({
         fill
         priority={priority}
         sizes={sizes}
+        placeholder={PHOTO_BLUR[k] ? "blur" : "empty"}
+        blurDataURL={PHOTO_BLUR[k]}
         className={cn("object-cover", imgClassName)}
         style={{ objectPosition: position }}
       />

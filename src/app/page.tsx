@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
 import { HomeHero } from "@/components/HomeHero";
@@ -8,8 +7,7 @@ import { JsonLd, faqSchema } from "@/components/JsonLdSchema";
 import { Shot } from "@/components/Photo";
 import { Slot, btn, cn } from "@/components/ui";
 import { FAQS } from "@/lib/site";
-import { getPosts } from "@/lib/blog";
-import { BlogCard } from "@/components/BlogCard";
+import { LatestPosts } from "@/components/LatestPosts";
 
 const PROOF_BAR = [
   { figure: "30", unit: "checks", text: "on every visit, in four areas" },
@@ -103,7 +101,7 @@ export default function Home() {
               Mangaluru is harder on an empty home than Bengaluru or Mumbai. These are the four things we find most.
             </p>
           </div>
-          <div className="mt-14 grid auto-rows-[minmax(220px,auto)] gap-4 md:grid-cols-4">
+          <div className="mt-14 grid gap-4 md:auto-rows-[minmax(220px,auto)] md:grid-cols-4">
             <Reveal className="dark relative isolate overflow-hidden rounded-[1.75rem] text-white md:col-span-2 md:row-span-2">
               <Shot k="window" className="absolute inset-0 -z-10" sizes="(min-width: 768px) 50vw, 100vw" />
               <div className="scrim-bottom absolute inset-0 -z-10" />
@@ -144,9 +142,9 @@ export default function Home() {
           </div>
           <Link
             href="/coverage"
-            className="mt-10 inline-flex items-center gap-2 font-semibold text-gold-ink transition-[gap] hover:gap-3"
+            className="group mt-10 inline-flex min-h-11 items-center gap-2 font-semibold text-gold-ink"
           >
-            Read the coastal climate guide <ArrowRight className="size-4" />
+            Read the coastal climate guide <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
         </div>
       </section>
@@ -275,7 +273,7 @@ export default function Home() {
 
       {/* Proof slots */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-3">
+        <Reveal stagger className="grid gap-4 md:grid-cols-3">
           <Slot title="Owner feedback from the Gulf">
             Two or three short quotes from pilot clients, with first name, city abroad and area (for example “Priya,
             Dubai, 2BHK in Kadri”). Only with written permission.
@@ -286,12 +284,10 @@ export default function Home() {
           <Slot title="Inspection count">
             A real running number, such as visits completed, once the pilot produces one.
           </Slot>
-        </div>
+        </Reveal>
       </section>
 
-      <Suspense fallback={null}>
-        <LatestPosts />
-      </Suspense>
+      <LatestPosts />
 
       <FAQ />
 
@@ -305,31 +301,5 @@ export default function Home() {
         body="Start with a single founding pilot audit. No contract, no monthly plan until you have read the report."
       />
     </>
-  );
-}
-
-/** The three newest guides from the admin blog. Hidden until something is published. */
-async function LatestPosts() {
-  const posts = (await getPosts()).slice(0, 3);
-  if (!posts.length) return null;
-  return (
-    <section className="mx-auto max-w-7xl px-4 pt-24 sm:px-6 md:pt-32 lg:px-8">
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div className="max-w-2xl">
-          <p className="text-[13px] font-semibold text-gold-ink">From the Axior desk</p>
-          <h2 className="display mt-3 text-4xl sm:text-5xl">
-            Guides for owners <em>far from home.</em>
-          </h2>
-        </div>
-        <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-gold-ink">
-          All guides <ArrowRight className="size-4" />
-        </Link>
-      </div>
-      <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {posts.map((p) => (
-          <BlogCard key={p.id} post={p} />
-        ))}
-      </div>
-    </section>
   );
 }

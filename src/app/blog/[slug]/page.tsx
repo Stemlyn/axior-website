@@ -44,6 +44,17 @@ async function Article({ params }: { params: PageProps<"/blog/[slug]">["params"]
       <JsonLd
         data={{
           "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+            { "@type": "ListItem", position: 2, name: "Owner guides", item: `${SITE.url}/blog` },
+            { "@type": "ListItem", position: 3, name: post.title },
+          ],
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
           "@type": "BlogPosting",
           headline: post.title,
           description: post.excerpt,
@@ -60,7 +71,7 @@ async function Article({ params }: { params: PageProps<"/blog/[slug]">["params"]
           <Shot k={post.cover} priority className="absolute inset-0 -z-10 opacity-55" sizes="100vw" />
           <div className="scrim-bottom absolute inset-0 -z-10" />
           <div className="mx-auto flex min-h-[560px] max-w-3xl flex-col justify-end px-4 pb-14 pt-36 sm:px-6 lg:min-h-[640px] lg:pb-20">
-            <Link href="/blog" className="mb-auto inline-flex w-fit items-center gap-2 text-sm text-white/70 hover:text-white">
+            <Link href="/blog" className="mb-auto inline-flex min-h-11 w-fit items-center gap-2 text-sm text-white/70 hover:text-white">
               <ArrowLeft className="size-4" /> All guides
             </Link>
             <p className="mt-10 text-[13px] font-semibold text-gold">{post.category}</p>

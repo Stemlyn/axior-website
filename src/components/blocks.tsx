@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Children, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { m } from "framer-motion";
+import { DUR, EASE_OUT, fadeUp, maskReveal, stagger, useScrollDepth } from "@/lib/motion";
 import { Camera, CheckCheck, Video } from "lucide-react";
 import { formatPrice, type PhotoKey, type PriceKey, type Severity } from "@/lib/site";
 import { useSite } from "@/lib/store";
@@ -53,21 +54,66 @@ export function DualClock({ className }: { className?: string }) {
 }
 
 /** Fades content up once as it enters the viewport. Use on a few key blocks, not everything. */
-export function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  stagger: staggered = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+  /** Reveal each direct child in turn (60 ms apart) instead of the block as one. */
+  stagger?: boolean;
+}) {
+  const view = { once: true, margin: "-10% 0px" } as const;
+  if (staggered) {
+    return (
+      <m.div className={className} variants={stagger(0.06, delay)} initial="hidden" whileInView="show" viewport={view}>
+        {Children.map(children, (child) => (child == null ? child : <m.div variants={fadeUp}>{child}</m.div>))}
+      </m.div>
+    );
+  }
   return (
-    <motion.div
+    <m.div
       className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={view}
+      transition={{ duration: DUR.base, delay, ease: EASE_OUT }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
-/** A photo that drifts slightly slower than the page as it scrolls past. */
+type ListTag = "ul" | "ol" | "div";
+const LIST = { ul: m.ul, ol: m.ol, div: m.div } as const;
+
+/** A grid or list whose items arrive one after another as it scrolls into view. Pair with StaggerItem. */
+export function StaggerList({ as = "div", className, children }: { as?: ListTag; className?: string; children: ReactNode }) {
+  const Tag = LIST[as];
+  return (
+    <Tag className={className} variants={stagger(0.06)} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-10% 0px" }}>
+      {children}
+    </Tag>
+  );
+}
+
+const ITEM = { li: m.li, div: m.div } as const;
+
+/** One item of a StaggerList (renders an li or div so list semantics stay intact). */
+export function StaggerItem({ as = "div", className, children }: { as?: "li" | "div"; className?: string; children: ReactNode }) {
+  const Tag = ITEM[as];
+  return (
+    <Tag className={className} variants={fadeUp}>
+      {children}
+    </Tag>
+  );
+}
+
+/** A photo that uncovers as it enters the view, then drifts slightly slower than the page as it scrolls past. */
 export function ParallaxShot({
   k,
   className,
@@ -80,16 +126,30 @@ export function ParallaxShot({
   position?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["-6%", "6%"]);
+  const y = useScrollDepth(ref);
+  // The outer element keeps the caller's classes (e.g. opacity-60 on CTA bands); the reveal animates
+  // an inner layer so its final opacity:1 never overrides them. No reduced-motion branch here: the
+  // server can't know the setting, and MotionConfig reducedMotion="user" already handles it.
   return (
     <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
-        <Shot k={k} className="h-full w-full" sizes={sizes} position={position} />
-      </motion.div>
+      <m.div
+        className="absolute inset-0"
+        variants={maskReveal}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-15% 0px" }}
+      >
+        <m.div style={{ y }} className="absolute inset-x-0 -inset-y-[8%]">
+          <Shot k={k} className="h-full w-full" sizes={sizes} position={position} />
+        </m.div>
+      </m.div>
     </div>
   );
+}
+
+/** Inline style for the CSS `rise` entrance: delay in seconds, optional travel distance. */
+export function riseAt(delay: number, y?: string): CSSProperties {
+  return { "--rise-delay": `${delay}s`, ...(y ? { "--rise-y": y } : {}) } as CSSProperties;
 }
 
 /** Photo-backed dark header that opens every inner page. */
@@ -113,25 +173,24 @@ export function PageHeader({
       <Shot k={photo} priority className="absolute inset-0 -z-10 opacity-70" position={position} sizes="100vw" />
       <div className="scrim-left absolute inset-0 -z-10" />
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-36 sm:px-6 lg:min-h-[620px] lg:grid-cols-[1.1fr_auto] lg:px-8 lg:pb-24 lg:pt-40">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-2xl"
-        >
-          <h1 className="display text-[2.9rem] sm:text-6xl lg:text-7xl">{title}</h1>
-          <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75">{intro}</p>
-          {children && <div className="mt-9">{children}</div>}
-        </motion.div>
+        {/* CSS entrance (globals.css `rise`): the title is painted on the first frame, no JavaScript needed. */}
+        <div className="max-w-2xl">
+          <h1 className="rise display text-[2.9rem] sm:text-6xl lg:text-7xl" style={riseAt(0.04)}>
+            {title}
+          </h1>
+          <p className="rise-move mt-6 max-w-xl text-[1.05rem] leading-relaxed text-white/75" style={riseAt(0.12)}>
+            {intro}
+          </p>
+          {children && (
+            <div className="rise mt-9" style={riseAt(0.2)}>
+              {children}
+            </div>
+          )}
+        </div>
         {aside && (
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="flex justify-center"
-          >
+          <div className="rise flex justify-center" style={riseAt(0.28, "32px")}>
             {aside}
-          </motion.div>
+          </div>
         )}
       </div>
     </section>
@@ -146,17 +205,19 @@ const REPORT: { status: Severity; text: string }[] = [
 ];
 
 /** The WhatsApp visit report as an owner sees it. */
-export function ReportCard({ className }: { className?: string }) {
-  const reduce = useReducedMotion();
+export function ReportCard({ className, entrance = "inView" }: { className?: string; entrance?: "css" | "inView" }) {
+  // In the first screen the lines use the CSS entrance (painted without JavaScript); further down
+  // the page they arrive as the card scrolls into view.
   const item = (i: number) =>
-    reduce
-      ? {}
+    entrance === "css"
+      ? { style: riseAt(0.6 + i * 0.12, "6px") }
       : {
-          initial: { opacity: 0, y: 6 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, margin: "-60px" },
-          transition: { delay: 0.3 + i * 0.25, duration: 0.4 },
-        };
+            initial: { opacity: 0, y: 6 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true, margin: "-60px" },
+            transition: { delay: 0.3 + i * 0.25, duration: 0.4 },
+          };
+  const rise = entrance === "css" && "rise";
 
   return (
     <div
@@ -180,16 +241,16 @@ export function ReportCard({ className }: { className?: string }) {
         <p className="mt-0.5 text-xs text-muted">In 10:31 IST, out 11:24 IST (09:01 to 09:54 in Dubai)</p>
         <ul className="mt-3 space-y-2">
           {REPORT.map((r, i) => (
-            <motion.li key={r.text} {...item(i)} className="flex items-start gap-2.5">
+            <m.li key={r.text} {...item(i)} className={cn("flex items-start gap-2.5", rise)}>
               <span className="mt-1.5">
                 <StatusDot status={r.status} />
               </span>
               <span>{r.text}</span>
-            </motion.li>
+            </m.li>
           ))}
         </ul>
       </div>
-      <motion.div {...item(4)} className="mt-2 grid grid-cols-3 gap-1.5">
+      <m.div {...item(4)} className={cn("mt-2 grid grid-cols-3 gap-1.5", rise)}>
         {(
           [
             ["window", "Window seal", "10:42"],
@@ -207,17 +268,17 @@ export function ReportCard({ className }: { className?: string }) {
             </span>
           </div>
         ))}
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         {...item(5)}
-        className="mt-2 flex items-center justify-between rounded-xl bg-mist px-3 py-2 text-xs text-muted"
+        className={cn("mt-2 flex items-center justify-between rounded-xl bg-mist px-3 py-2 text-xs text-muted", rise)}
       >
         <span className="flex items-center gap-1.5">
           <Video className="size-3.5" aria-hidden /> Narrated summary 2:04
           <span className="text-line" aria-hidden>|</span> Full visit 53 min
         </span>
         <CheckCheck className="size-4 text-sky-500" aria-label="Read" />
-      </motion.div>
+      </m.div>
     </div>
   );
 }
