@@ -174,3 +174,33 @@ footer :focus-visible {
     animation: none;
   }
 }
+
+/* Page-to-page fade (app/template.tsx), in CSS so it never depends on the lazily loaded motion code. */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.page-enter {
+  animation: page-enter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes page-enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: page-enter-fade 0.2s ease both;
+  }
+}
+
+/* If framer-motion's features fail to load (or are very late), content waiting for a scroll reveal
+   is shown as-is instead of staying hidden. Set by Providers.tsx; same rule as the <noscript> net. */
+.motion-fallback [style*="opacity:0"],
+.motion-fallback [style*="opacity: 0"] {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
