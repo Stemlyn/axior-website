@@ -44,6 +44,17 @@ async function Article({ params }: { params: PageProps<"/blog/[slug]">["params"]
       <JsonLd
         data={{
           "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
+            { "@type": "ListItem", position: 2, name: "Owner guides", item: `${SITE.url}/blog` },
+            { "@type": "ListItem", position: 3, name: post.title },
+          ],
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
           "@type": "BlogPosting",
           headline: post.title,
           description: post.excerpt,
