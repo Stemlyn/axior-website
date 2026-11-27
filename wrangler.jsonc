@@ -1,0 +1,26 @@
+// Cloudflare Workers config for the AXIOR website (built with @opennextjs/cloudflare).
+// `name` must match the Worker in the Cloudflare dashboard (Workers & Pages > axior-website).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "axior-website",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Lets the Worker call itself (used by OpenNext for caching/revalidation). Must equal `name`.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "axior-website"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

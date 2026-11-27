@@ -42,3 +42,8 @@ next-env.d.ts
 /.next-build/
 
 !.env.example
+
+# cloudflare
+/.open-next/
+/.wrangler/
+.dev.vars*

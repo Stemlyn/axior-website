@@ -390,5 +390,8 @@ export const PHOTOS = {
   meter: { src: "/photos/meter.jpg", alt: "An inspector measuring wall moisture beside a window", w: 1600, h: 2000 },
   keys: { src: "/photos/keys.jpg", alt: "House keys with coded brass tags inside a steel key safe", w: 2000, h: 2000 },
   window: { src: "/photos/window.jpg", alt: "Monsoon rain on a window frame with a cracked silicone seal", w: 1600, h: 2000 },
+  tower: { src: "/photos/tower.jpg", alt: "A white and teak apartment tower among coconut palms at dusk after rain, with the sea beyond", w: 2000, h: 1131 },
+  city: { src: "/photos/city.jpg", alt: "Mangaluru from above: tiled roofs, apartment towers and coconut palms running to the Arabian Sea", w: 2000, h: 857 },
+  plot: { src: "/photos/plot.jpg", alt: "A vacant plot of red earth behind a laterite stone wall and wire fence, ringed by coconut and areca palms", w: 2000, h: 1131 },
 } as const;
 export type PhotoKey = keyof typeof PHOTOS;

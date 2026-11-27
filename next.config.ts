@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || ".next",
   // Lets the dev server be viewed through a Cloudflare quick tunnel (*.trycloudflare.com).
   allowedDevOrigins: ["*.trycloudflare.com"],
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components is off: the Cloudflare adapter (OpenNext) does not support it yet and pages
+  // hang on Workers. Live data (prices, site settings, blog) is read per request via connection().
   turbopack: {
     rules: {
       "*.css": {

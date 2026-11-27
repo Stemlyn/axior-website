@@ -11,10 +11,6 @@ import { getPost, getPosts, postDate } from "@/lib/blog";
 import { Markdown, readMinutes } from "@/lib/markdown";
 import { PHOTOS, SITE } from "@/lib/site";
 
-// Posts are written in the admin at any time, so each article is rendered per request rather than
-// prerendered. This lets the root layout's navbar (usePathname) render inline on this dynamic route.
-export const instant = false;
-
 export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);

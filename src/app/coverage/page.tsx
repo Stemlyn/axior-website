@@ -3,6 +3,7 @@ import { MapPin } from "lucide-react";
 import { CtaBand, PageHeader } from "@/components/blocks";
 import { FAQ } from "@/components/FAQ";
 import { JsonLd, faqSchema } from "@/components/JsonLdSchema";
+import { Shot } from "@/components/Photo";
 import { SectionHead, Slot } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -43,8 +44,8 @@ export default function CoveragePage() {
     <>
       <JsonLd data={faqSchema(COVERAGE_FAQ)} />
       <PageHeader
-        photo="villa"
-        position="center 35%"
+        photo="city"
+        position="center 60%"
         title={
           <>
             Local, <em>street by street.</em>
@@ -78,6 +79,30 @@ export default function CoveragePage() {
         <p className="mt-6 text-center text-sm text-muted">
           Also Kodialbail, Hampankatta, Kankanady, Urwa and the rest of the city.
         </p>
+        <div className="mt-14 grid gap-4 md:grid-cols-2">
+          {[
+            {
+              k: "tower" as const,
+              t: "Apartments",
+              b: "Bejai, Falnir, Bendoorwell and Derebail are mostly apartment blocks. Upper floors take the wind-driven rain, so we check terraces, balcony drains and window seals first.",
+            },
+            {
+              k: "plot" as const,
+              t: "Vacant plots",
+              b: "In Kottara, Surathkal and the edges of the city we walk the boundary stones and fence, look for dumping or encroachment, and come back after heavy rain to check for water-logging.",
+            },
+          ].map((x) => (
+            <div
+              key={x.k}
+              className="dark relative isolate flex min-h-[380px] flex-col justify-end overflow-hidden rounded-[1.75rem] p-7 text-white sm:p-9"
+            >
+              <Shot k={x.k} className="absolute inset-0 -z-10" sizes="(min-width: 768px) 50vw, 100vw" />
+              <div className="scrim-bottom absolute inset-0 -z-10" />
+              <h3 className="display text-5xl">{x.t}</h3>
+              <p className="mt-3 max-w-md leading-relaxed text-white/80">{x.b}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section id="climate" className="bg-mist py-16 md:py-24">
