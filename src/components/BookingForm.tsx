@@ -74,7 +74,7 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
         ]
       : [
           { icon: Repeat, title: info.cadence, body: info.summary },
-          { icon: Video, title: "Report within 24 hours", body: "Photos, a 2-minute narrated video and the full visit recording, on WhatsApp." },
+          { icon: Video, title: "Report within 4 hours", body: "A PDF condition dossier, a 2-minute narrated video and the full visit recording, on WhatsApp." },
           ...(pilotOn
             ? [{ icon: BadgeCheck, title: "Not sure yet?", body: `Start with the ${price("pilot")} founding pilot audit and decide after the report.` }]
             : []),

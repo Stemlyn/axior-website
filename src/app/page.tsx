@@ -11,16 +11,16 @@ import { LatestPosts } from "@/components/LatestPosts";
 
 const PROOF_BAR = [
   { figure: "30", unit: "checks", text: "on every visit, in four areas" },
-  { figure: "24", unit: "hours", text: "to a photo report on WhatsApp" },
+  { figure: "4", unit: "hours", text: "to a condition report on WhatsApp" },
   { figure: "100%", unit: "filmed", text: "entry to exit, no edits" },
-  { figure: "+10%", unit: "flat", text: "on repairs, at vendor cost" },
+  { figure: "₹0", unit: "advances", text: "repairs paid upfront, never from our pocket" },
 ];
 
 const STEPS = [
   { title: "Message us on WhatsApp", body: "Property type and area. We reply with a slot that suits your time zone." },
   { title: "Hand over the keys", body: "Tagged with a code, never an address, and logged into a dual-custody safe." },
   { title: "We inspect and film", body: "Thirty checks across seepage, air, plumbing and electrical." },
-  { title: "You read the report", body: "Flags, photos, readings and a 2-minute narrated video within 24 hours, plus the full recording." },
+  { title: "You read the report", body: "A PDF condition dossier and a 2-minute narrated video within 4 hours, plus the full recording." },
 ];
 
 const CUSTODY = [
@@ -216,6 +216,7 @@ export default function Home() {
             </p>
             <ul className="mt-10 grid gap-4 sm:grid-cols-2">
               {[
+                "A sealed PDF dossier, room by room",
                 "Every point flagged green, amber or red",
                 "Timestamped photos of anything off",
                 "Humidity and moisture readings",

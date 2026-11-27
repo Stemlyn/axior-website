@@ -10,9 +10,9 @@ import { FAQS } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Services & Pricing",
   description:
-    "Property care pricing for NRI owners in Mangaluru, by home size: Spot Audit from ₹1,299, Essential Care from ₹2,499/mo. Repairs at vendor cost plus 10%.",
+    "Property care pricing for NRI owners in Mangaluru, by home size: Spot Audit from ₹1,299, Essential Care from ₹2,499/mo. Repairs paid upfront at vendor cost.",
   alternates: { canonical: "/services" },
-  openGraph: { title: "Services & Pricing | AXIOR Mangaluru", description: "Property care pricing for NRI owners in Mangaluru, by home size: Spot Audit from ₹1,299, Essential Care from ₹2,499/mo. Repairs at vendor cost plus 10%.", url: "/services", images: "/opengraph-image.jpg" },
+  openGraph: { title: "Services & Pricing | AXIOR Mangaluru", description: "Property care pricing for NRI owners in Mangaluru, by home size: Spot Audit from ₹1,299, Essential Care from ₹2,499/mo. Repairs paid upfront at vendor cost.", url: "/services", images: "/opengraph-image.jpg" },
 };
 
 const INCLUDED = [
@@ -29,50 +29,50 @@ const INCLUDED = [
     body: "Every tap and shower run and every toilet flushed to refill dry traps, stop sewer gas and spot slow drips.",
   },
   {
-    title: "Utility and notice tracking",
-    body: "MESCOM meter and breaker photos, society circulars and mail collected, and a heads-up before dues lapse.",
+    title: "Electrical, meter and pest check",
+    body: "MESCOM meter photo, main breaker board, inverter battery level, and a scan for termite mud trails and rodent entry points.",
   },
   {
-    title: "Photo report and video",
-    body: "Timestamped photos with a flag on every point, a 2-minute narrated video and the full unedited recording, on WhatsApp within 24 hours.",
+    title: "Condition dossier and video",
+    body: "Within 4 hours: a sealed PDF dossier, timestamped in IST and Gulf time, room by room in green, amber or red, plus a 2-minute narrated video and the full recording.",
   },
   {
     title: "Secure key custody",
-    body: "Coded tags with no address, a dual-custody safe, and video from unlocking the door to locking it again.",
+    body: "Serialised tags with no address in a dual-custody lockbox, and video from unlocking the door to locking it again.",
   },
 ];
 
 const EXCLUDED = [
   {
-    title: "No do-it-yourself repairs",
-    body: "Inspectors document faults; they never attempt electrical, plumbing or structural work themselves. Qualified vendors do.",
+    title: "No in-house repairs",
+    body: "Inspectors document and photograph faults; they never do plumbing, electrical or structural work themselves. Vetted vendors do.",
   },
   {
-    title: "No 24/7 security or guarantees",
-    body: "Visits are point-in-time inspections, not round-the-clock guarding, insurance or a warranty against natural damage.",
+    title: "No 24/7 security or structural warranty",
+    body: "Visits are scheduled point-in-time audits. We are not a security force, an alarm centre or a home insurer.",
   },
   {
-    title: "No custody of valuables",
-    body: "Cash, gold, jewellery and other portable valuables must not be left in the property.",
+    title: "No storage of valuables",
+    body: "Under our No-Valuables Agreement, cash, jewellery, gold and other high-value portable items must not be left in the home.",
   },
   {
     title: "No cash advances",
-    body: "We never front money for utility bills, society dues or contractor work.",
+    body: "We never front money for property tax, MESCOM bills, society dues or contractor charges.",
   },
   {
     title: "No free errand-running",
-    body: "Visits take 30 to 45 minutes on site. Waiting for deliveries or running errands is a separately billed add-on.",
+    body: "Visits are capped at 30 to 45 minutes on site. Waiting for deliveries or running errands is a concierge add-on at ₹299 to ₹499 an hour.",
   },
 ];
 
 const REPAIR_STEPS = [
-  { title: "Document", body: "The inspector photographs the fault, flags it red and describes it in your report." },
-  { title: "Quote", body: "We get a quote from a vetted Mangaluru electrician, plumber or pest-control firm and send it on WhatsApp." },
+  { title: "Document", body: "Close-up photos and unbroken video of the fault, tagged red (urgent) or amber (monitor), with no guesswork." },
+  { title: "Quote", body: "An itemised estimate from a vetted Mangaluru electrician, plumber or pest-control partner, sent on WhatsApp." },
   {
-    title: "Approve and pay",
-    body: "Work starts only after you reply “APPROVED” and transfer the vendor estimate plus the flat 10% fee.",
+    title: "Approve and pay upfront",
+    body: "Work starts only after you reply “APPROVED” and transfer 100% of the vendor estimate by UPI or bank transfer.",
   },
-  { title: "Supervise and verify", body: "We let the vendor in, check the work, and send before-and-after video with the original invoice." },
+  { title: "Supervise and verify", body: "We supervise the vendor on site, check the work, and send before-and-after video with the original invoice." },
 ];
 
 const SERVICE_FAQS = [
@@ -146,11 +146,12 @@ export default function ServicesPage() {
             <div>
               <Scale className="size-10 text-gold-ink" strokeWidth={1.3} aria-hidden />
               <h2 className="display mt-6 text-4xl sm:text-5xl">
-                The 10% rule: <em>vendor cost, plus ten.</em>
+                Repairs paid upfront, <em>never from our pocket.</em>
               </h2>
               <p className="mt-5 leading-relaxed text-muted">
-                When a visit finds something broken, this is exactly what happens. You pay 100% of the vendor’s estimate
-                plus a flat 10% for finding, supervising and checking the work. We take no commission from vendors.
+                When a visit finds something broken, this is exactly what happens. You approve the quote and transfer 100%
+                of the vendor’s estimate before work starts. Supervising the vendor’s visit is a flat standby fee; one
+                standby visit a month is included with Monsoon VIP Shield.
               </p>
               <div className="mt-8 grid max-w-md grid-cols-3 gap-px overflow-hidden rounded-xl bg-line text-sm">
                 <div className="bg-white p-4">
@@ -158,12 +159,12 @@ export default function ServicesPage() {
                   <p className="mt-1 text-lg font-semibold">₹6,000</p>
                 </div>
                 <div className="bg-white p-4">
-                  <p className="text-muted">Axior 10%</p>
-                  <p className="mt-1 text-lg font-semibold">₹600</p>
+                  <p className="text-muted">Paid upfront</p>
+                  <p className="mt-1 text-lg font-semibold">100%</p>
                 </div>
                 <div className="bg-night p-4 text-white">
-                  <p className="text-white/60">You pay</p>
-                  <p className="mt-1 text-lg font-semibold text-gold">₹6,600</p>
+                  <p className="text-white/60">Our cash float</p>
+                  <p className="mt-1 text-lg font-semibold text-gold">₹0</p>
                 </div>
               </div>
             </div>

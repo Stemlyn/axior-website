@@ -40,8 +40,8 @@ const MATRIX: Record<PropertyType, Record<PriceKey, Ref>> = {
   apartment: {
     pilot: { INR: 799, AED: 35, USD: 10 },
     spot: { INR: 1299, AED: 58, USD: 16 },
-    essential: { INR: 2499, AED: 110, USD: 30 },
-    vip: { INR: 4499, AED: 200, USD: 54 },
+    essential: { INR: 2499, AED: 99, USD: 27 },
+    vip: { INR: 4499, AED: 178, USD: 49 },
   },
   "large-flat": {
     pilot: { INR: 799, AED: 35, USD: 10 },
@@ -232,13 +232,14 @@ export const TIERS: {
     name: "Spot Audit",
     cadence: "One visit",
     per: "",
-    summary: "A full 30-point inspection before you renew a lease, sell, or fly home.",
+    summary: "An on-demand diagnostic for an urgent check, a tenant handover or a pre-monsoon assessment.",
     includes: [
-      "30-point inspection across all four pillars",
-      "Timestamped photo report on WhatsApp within 24 hours",
-      "2-minute narrated video plus the full visit recording",
-      "Green, amber and red flag for every point",
-      "Repair estimates for anything flagged red",
+      "Full 30-point visual, structural and plumbing diagnostic",
+      "Air flush and plumbing seal refill during the visit",
+      "MESCOM meter photo and mail collected from the security desk",
+      "Photo dossier and 2-minute narrated video within 4 hours",
+      "Itemised local contractor estimates for any fault found",
+      "45 to 60 minutes on site",
     ],
   },
   {
@@ -246,13 +247,15 @@ export const TIERS: {
     name: "Essential Care",
     cadence: "2 visits a month",
     per: "/mo",
-    summary: "Bi-weekly home-watch for locked flats and plots, all year.",
+    summary: "Our core plan: preventive care every 14 to 15 days for locked apartments, all year.",
     includes: [
-      "Everything in Spot Audit, every visit",
-      "Drain flush and P-trap refill to stop sewer gas",
-      "Cross-ventilation and humidity reading",
-      "Narrated summary and full entry-to-exit recording, every visit",
-      "Bills, flyers and door notices cleared",
+      "Twice-monthly 30-point audit of every room, ceiling, lock and balcony",
+      "30-minute cross-ventilation against wardrobe fungus and musty smells",
+      "Plumbing flush cycle to refill traps and block sewer gas",
+      "Meter photos and alerts when society circulars or dues arrive",
+      "2 photo dossiers and 2 narrated videos a month on WhatsApp",
+      "Coded keys in a dual-custody lockbox",
+      "30 to 45 minutes on site per visit",
     ],
   },
   {
@@ -260,13 +263,16 @@ export const TIERS: {
     name: "Monsoon VIP Shield",
     cadence: "Weekly, 4 visits a month",
     per: "/mo",
-    summary: "For villas and top-floor flats through the Mangaluru monsoon.",
+    summary: "Weekly all-inclusive care for villas and high-risk homes, built for June to September.",
     includes: [
-      "Everything in Essential Care",
-      "Weekly visits from June to September",
-      "Check within 24 hours of a heavy-rain alert",
-      "Moisture-meter readings on walls and ceilings",
-      "Priority dispatch of your approved vendors",
+      "Everything in Essential Care, every 7 days",
+      "Weekly terrace and balcony drain clearing",
+      "Weekly inverter, breaker panel and appliance checks",
+      "Mail and courier collected and scanned",
+      "Monthly asset snapshot of condition trends",
+      "Inspection within 24 hours of a heavy-rain red alert",
+      "One vendor supervision visit a month included (up to 45 minutes)",
+      "45 to 60 minutes on site per visit",
     ],
   },
 ];
@@ -277,7 +283,7 @@ export const PILOT = {
   name: "Founding pilot audit",
   cadence: "One visit, first-time clients",
   per: "",
-  summary: "Your first full 30-point Spot Audit at the founding price, to see our work before choosing a plan.",
+  summary: "One complete 30-point visit (about 45 minutes) at the founding price, to see our work before choosing a plan.",
 };
 
 export const PLAN_KEYS: PriceKey[] = ["pilot", "spot", "essential", "vip"];
@@ -390,7 +396,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "How are repairs billed if something is flagged red?",
-    a: "Nothing is fixed without your written approval. We photograph the fault and send a vetted local vendor's quote on WhatsApp. Work starts once you reply APPROVED and transfer the estimate plus a flat 10% coordination fee. We supervise the job and send before-and-after video with the vendor's original invoice.",
+    a: "Nothing is fixed without your written approval, and we never pay vendors from our own pocket. We photograph and film the fault, tag it red or amber, and send an itemised quote from a vetted Mangaluru partner on WhatsApp. Work starts once you reply APPROVED and transfer 100% of the vendor estimate. We supervise the vendor's visit for a flat standby fee (one standby visit a month is included with Monsoon VIP Shield), check the work, and send before-and-after video with the vendor's original invoice.",
   },
   {
     q: "Is Axior better suited to a flat or a villa?",
@@ -402,7 +408,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "What do I receive after each visit?",
-    a: "A WhatsApp report within 24 hours: all 30 points marked green, amber or red, timestamped photos of anything flagged, humidity and meter readings, a 2-minute narrated video walkthrough, and a link to the full unedited recording of the visit. Times are shown in IST and your Gulf time zone.",
+    a: "Within 4 hours of the visit: a sealed PDF condition dossier (timestamped in IST and your Gulf time, room by room, every point green, amber or red, with close-up photos, the electricity meter reading and any mail), and a 2-minute narrated video walkthrough on WhatsApp. The full unedited recording of the visit is linked too.",
   },
 ];
 

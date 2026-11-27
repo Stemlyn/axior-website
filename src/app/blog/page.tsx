@@ -86,7 +86,7 @@ export default function BlogPage() {
             Rather we <em>check</em> for you?
           </>
         }
-        body="Book one founding pilot audit and get the full 30-point report, photos and video within 24 hours."
+        body="Book one founding pilot audit and get the full 30-point dossier, photos and video within 4 hours."
       />
     </>
   );

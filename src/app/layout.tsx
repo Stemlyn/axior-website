@@ -16,7 +16,7 @@ const instrument = Instrument_Serif({
 });
 
 const description =
-  "Bi-weekly home-watch, 30-point audits and monsoon checks for NRI-owned flats, villas and plots in Mangaluru. Photo reports on WhatsApp within 24 hours.";
+  "Bi-weekly home-watch, 30-point audits and monsoon checks for NRI-owned flats, villas and plots in Mangaluru. Condition reports on WhatsApp within 4 hours.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),

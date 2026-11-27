@@ -121,7 +121,7 @@ export default function BlogPostPage({ params }: PageProps<"/blog/[slug]">) {
             Your home, <em>checked</em> every fortnight.
           </>
         }
-        body="Start with one founding pilot audit: the 30-point report, photos and a narrated video on WhatsApp within 24 hours."
+        body="Start with one founding pilot audit: the 30-point dossier, photos and a narrated video on WhatsApp within 4 hours."
       />
     </>
   );

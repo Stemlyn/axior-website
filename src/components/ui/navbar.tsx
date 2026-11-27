@@ -60,7 +60,7 @@ const MENUS: MegaMenu[] = [
       },
     ],
     footerLinks: [
-      { label: "The 10% repair rule", href: "/services#repairs" },
+      { label: "How repairs are paid", href: "/services#repairs" },
       { label: "Compare every inclusion", href: "/services#compare" },
     ],
     image: "interior",

@@ -51,7 +51,7 @@ export function HomeHero() {
           </h1>
           <p {...line(4)} className="rise-move mt-7 max-w-xl text-lg leading-relaxed text-white/75">
             Professional oversight for NRI-owned apartments, villas and plots in Bejai, Kadri, Falnir and across coastal
-            Karnataka. Scheduled visits, a 30-point audit, and a photo report on WhatsApp within 24 hours.
+            Karnataka. Scheduled visits, a 30-point audit, and a condition report on WhatsApp within 4 hours.
           </p>
           <div {...line(5)} className="rise mt-10 flex flex-col gap-3 sm:flex-row">
             <Link href="/book" className={cn(btn.base, btn.gold, "py-3.5")}>
