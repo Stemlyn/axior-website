@@ -17,6 +17,15 @@
       "service": "axior-website"
     }
   ],
+  // Shared with the admin console (Workers & Pages > D1 > axior-db): same database_id in both.
+  // The website only reads the published keys (pricing, site, blog); see src/lib/published.ts.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "axior-db",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ],
   "images": {
     "binding": "IMAGES"
   },

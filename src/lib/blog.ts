@@ -1,12 +1,10 @@
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { connection } from "next/server";
+import { readPublished } from "./published";
 import { PHOTOS, type PhotoKey } from "./site";
 
 /*
  * Blog posts written and published in the admin console (Content > Blog).
- * - With Supabase configured: the public `blog` row of admin_kv (published posts only).
- * - Demo mode: the shared file the console writes (../shared/published.json).
+ * Read through lib/published.ts: Cloudflare D1 in production, the console's shared file locally.
  * Drafts never reach the website. Always read at request time, so a publish shows up on the next load.
  */
 
@@ -22,10 +20,6 @@ export interface Post {
   publishedAt: string;
   updatedAt: string;
 }
-
-const SUPA_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPA_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const FILE = process.env.AXIOR_SHARED_FILE || resolve(/* turbopackIgnore: true */ process.cwd(), "../shared/published.json");
 
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 
@@ -53,17 +47,7 @@ function clean(raw: unknown): Post[] {
 }
 
 async function load(): Promise<unknown> {
-  if (SUPA_URL && SUPA_KEY) {
-    const res = await fetch(`${SUPA_URL}/rest/v1/admin_kv?key=eq.blog&select=value`, {
-      headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
-      cache: "no-store",
-    });
-    if (!res.ok) return [];
-    const rows = (await res.json()) as { value: unknown }[];
-    return rows[0]?.value ?? [];
-  }
-  const data = JSON.parse(await readFile(/* turbopackIgnore: true */ FILE, "utf8"));
-  return data.blog ?? [];
+  return (await readPublished()).blog ?? [];
 }
 
 export async function getPosts(): Promise<Post[]> {

@@ -18,7 +18,7 @@ Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4 (tokens live in `sr
 - `src/lib/store.tsx`: client state (currency with detection, property, area, visitor's home time zone); `whatsappLink()` builds the pre-filled booking message.
 - `src/components/blocks.tsx`: PageHeader (navy panel), CtaBand, ReportCard, DualClock, Price.
 - `src/components/JsonLdSchema.tsx`: Organization + ProfessionalService/LocalBusiness in the layout; `faqSchema()` per page.
-- Blog: written in the admin console (Content > Blog). `src/lib/blog.ts` reads published posts per request (Supabase `blog` row, or `../shared/published.json` in demo mode); pages in `src/app/blog`, safe Markdown in `src/lib/markdown.tsx` (mirrored in admin, keep in sync).
+- Blog: written in the admin console (Content > Blog). `src/lib/blog.ts` reads published posts per request via `src/lib/published.ts` (Cloudflare D1 `kv` table in production, `../shared/published.json` locally); pages in `src/app/blog`, safe Markdown in `src/lib/markdown.tsx` (mirrored in admin, keep in sync).
 - `<Slot>` (in `ui.tsx`) marks content that needs real proof before launch. Search for `<Slot` to find them all.
 
 ## Design tokens
@@ -30,7 +30,7 @@ Motion: one orchestrated hero (`HomeHero.tsx`), `Reveal` and `ParallaxShot` used
 Nav: `src/components/ui/navbar.tsx`, a floating card with mega panels (structure from the navbar2 reference). Menu data is `MENUS` at the top. Desktop from `lg` (short labels below `xl`): hover-intent or click opens, content swaps in place, arrow keys between items, ArrowDown/Enter focuses the panel, Escape returns focus, page dims behind. Hides on scroll down, returns on scroll up. Mobile panel locks page scroll. Closes on any route change. The card must not use overflow-hidden or the currency dropdown is clipped. The page nav list (`NAV`) lives in `src/lib/nav.ts` so server components can use it.
 Currency: detected after mount from the browser time zone, then language region (`detectLocale` in `site.ts`); a manual pick is saved in localStorage `axior-currency`. Prices per currency are hand-set in `PRICES`; billing stays INR.
 Production build alongside dev: `NEXT_DIST_DIR=.next-build npm run build`.
-Hosting: Cloudflare Workers via @opennextjs/cloudflare (`wrangler.jsonc`, `open-next.config.ts`). Worker name `axior-website` must match the dashboard. Cloudflare build command `npx opennextjs-cloudflare build`, deploy command `npx opennextjs-cloudflare deploy`; `npm run preview` runs it locally in the Workers runtime. `cacheComponents` stays off: OpenNext doesn't support it yet (pages hang). On Cloudflare there is no `../shared/published.json`, so live prices, settings and blog need the Supabase env vars set on the Worker.
+Hosting: Cloudflare Workers via @opennextjs/cloudflare (`wrangler.jsonc`, `open-next.config.ts`). Worker name `axior-website` must match the dashboard. Cloudflare build command `npx opennextjs-cloudflare build`, deploy command `npx opennextjs-cloudflare deploy`; `npm run preview` runs it locally in the Workers runtime. `cacheComponents` stays off: OpenNext doesn't support it yet (pages hang). Published prices, settings and blog come from the D1 database `axior-db` (binding `DB`), shared with the admin console; the website only reads the keys pricing, site and blog.
 
 ## Rules
 - Prices are set per currency in `PRICES`, not converted live. Billing is in INR.

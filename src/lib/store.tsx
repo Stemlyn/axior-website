@@ -25,8 +25,6 @@ type Ctx = {
   siteInfo: PublishedSite | null;
 };
 
-const SUPA_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPA_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const PREF_KEY = "axior-currency";
 
@@ -38,8 +36,8 @@ export function SiteProvider({ children }: { children: ReactNode }) {
   const [published, setPublished] = useState<PublishedPricing | null>(null);
   const [siteInfo, setSiteInfo] = useState<PublishedSite | null>(null);
 
-  // Prices and site settings published from the admin console. With Supabase configured they come
-  // from the database; otherwise from the local bridge (/api/published, demo mode on one machine).
+  // Prices and site settings published from the admin console, via /api/published (Cloudflare D1 in
+  // production, the console's shared file locally).
   // Re-checked when the tab regains focus, so admin changes show up without a reload.
   // Any failure falls back silently to the built-in values.
   useEffect(() => {
@@ -53,19 +51,9 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     const load = () => {
       ctrl.abort();
       ctrl = new AbortController();
-      const req =
-        SUPA_URL && SUPA_KEY
-          ? fetch(`${SUPA_URL}/rest/v1/admin_kv?key=in.(pricing,site)&select=key,value`, {
-              headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` },
-              signal: ctrl.signal,
-            })
-              .then((r) => (r.ok ? r.json() : null))
-              .then((rows: { key: string; value: unknown }[] | null) =>
-                apply(rows?.find((r) => r.key === "pricing")?.value, rows?.find((r) => r.key === "site")?.value),
-              )
-          : fetch("/api/published", { cache: "no-store", signal: ctrl.signal })
-              .then((r) => (r.ok ? r.json() : null))
-              .then((d: { pricing?: unknown; site?: unknown } | null) => apply(d?.pricing, d?.site));
+      const req = fetch("/api/published", { cache: "no-store", signal: ctrl.signal })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d: { pricing?: unknown; site?: unknown } | null) => apply(d?.pricing, d?.site));
       req.catch(() => {});
     };
     load();
