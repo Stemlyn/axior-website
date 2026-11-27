@@ -9,7 +9,8 @@
     "lint": "eslint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "check:perf": "node scripts/perf/check-routes.mjs && node scripts/perf/check-hidden.mjs && node scripts/perf/check-motion-imports.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.19",
