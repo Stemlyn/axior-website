@@ -1,0 +1,3 @@
+# Cloudflare static assets: cache the pre-generated photo sizes (regenerate under new names to bust).
+/photos/opt/*
+  Cache-Control: public, max-age=2592000
