@@ -56,7 +56,7 @@ export function InspectionWalkthrough() {
                 aria-controls={`panel-${p.id}`}
                 onClick={() => setActive(p.id)}
                 className={cn(
-                  "shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition-colors",
+                  "min-h-11 shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition-colors",
                   selected ? "bg-navy text-white" : "text-muted hover:text-ink",
                 )}
               >

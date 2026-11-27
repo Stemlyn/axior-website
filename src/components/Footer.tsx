@@ -32,7 +32,7 @@ export function Footer() {
               Axior inspects and reports on property condition. We do not take custody of valuables, and all repairs are
               carried out by third-party vendors you approve.
             </p>
-            <a href={whatsappChat} target="_blank" rel="noopener noreferrer" className={cn(btn.base, btn.emerald, "mt-7 px-5 py-2.5")}>
+            <a href={whatsappChat} target="_blank" rel="noopener noreferrer" className={cn(btn.base, btn.emerald, "mt-7 min-h-11 px-5 py-2.5")}>
               <WhatsAppIcon className="size-4" /> WhatsApp support
             </a>
             {socials.length > 0 && (
@@ -55,21 +55,21 @@ export function Footer() {
           </div>
           <div>
             <p className="font-semibold text-white">Evaluate</p>
-            <ul className="mt-3 space-y-1">
+            <ul className="mt-2">
               {NAV.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="inline-block py-1 hover:text-white">
+                  <Link href={l.href} className="inline-flex min-h-11 items-center hover:text-white">
                     {l.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/blog" className="inline-block py-1 hover:text-white">
+                <Link href="/blog" className="inline-flex min-h-11 items-center hover:text-white">
                   Owner guides & blog
                 </Link>
               </li>
               <li>
-                <Link href="/book" className="inline-block py-1 hover:text-white">
+                <Link href="/book" className="inline-flex min-h-11 items-center hover:text-white">
                   Book a pilot audit
                 </Link>
               </li>
@@ -77,9 +77,9 @@ export function Footer() {
           </div>
           <div>
             <p className="font-semibold text-white">Contact</p>
-            <ul className="mt-3 space-y-1">
+            <ul className="mt-2">
               <li>
-                <a href={`mailto:${email}`} className="inline-block py-1 hover:text-white">
+                <a href={`mailto:${email}`} className="inline-flex min-h-11 items-center hover:text-white">
                   {email}
                 </a>
               </li>

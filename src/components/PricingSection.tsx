@@ -44,7 +44,7 @@ export function PricingSection() {
               aria-selected={property === p.id}
               onClick={() => setProperty(p.id)}
               className={cn(
-                "rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
+                "min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
                 property === p.id ? "border-night bg-night text-white" : "border-line bg-white text-muted hover:text-ink",
               )}
             >
@@ -52,7 +52,7 @@ export function PricingSection() {
             </button>
           ))}
         </div>
-        <CurrencyToggle tone="light" className="text-xs [&_button]:px-4 [&_button]:py-1.5" />
+        <CurrencyToggle tone="light" className="text-xs [&_button]:px-4 [&_button]:py-1.5 max-sm:[&_button]:min-h-11" />
       </div>
 
       <div className="mx-auto mt-8 grid max-w-4xl gap-6 rounded-[2rem] bg-mist p-6 sm:p-8 md:grid-cols-3">

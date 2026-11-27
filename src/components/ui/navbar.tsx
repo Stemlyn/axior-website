@@ -404,7 +404,7 @@ export default function AxiorNavbar() {
           >
             {/* Top row */}
             <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:h-[4.5rem] lg:px-7">
-              <Link href="/" className="-m-2 flex shrink-0 items-center gap-3 p-2 text-ink" aria-label="Axior home">
+              <Link href="/" className="-m-2 flex min-h-11 shrink-0 items-center gap-3 p-2 text-ink" aria-label="Axior home">
                 <Wordmark className="h-[17px] w-auto sm:h-[19px]" />
                 <span className="hidden border-l border-line pl-3 text-[11px] leading-tight text-muted 2xl:block">
                   Asset stewardship

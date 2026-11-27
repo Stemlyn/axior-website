@@ -119,11 +119,12 @@ export function BookingFlow({ initialPlan }: { initialPlan?: PriceKey }) {
                 disabled={i > step}
                 onClick={() => setStep(i)}
                 aria-current={i === step ? "step" : undefined}
-                className="w-full text-left disabled:cursor-default"
+                className="min-h-11 w-full text-left disabled:cursor-default"
               >
                 <span className={cn("block h-1 rounded-full", i <= step ? "bg-gold" : "bg-line")} />
-                <span className={cn("mt-2 block text-sm", i === step ? "font-semibold text-ink" : "text-muted")}>
-                  {i + 1}. {s}
+                <span className={cn("mt-2 block whitespace-nowrap text-[13px] sm:text-sm", i === step ? "font-semibold text-ink" : "text-muted")}>
+                  <span className="max-sm:sr-only">{i + 1}. </span>
+                  {s}
                 </span>
               </button>
             </li>

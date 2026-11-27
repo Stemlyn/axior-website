@@ -144,7 +144,7 @@ export default function Home() {
           </div>
           <Link
             href="/coverage"
-            className="mt-10 inline-flex items-center gap-2 font-semibold text-gold-ink transition-[gap] hover:gap-3"
+            className="mt-10 inline-flex min-h-11 items-center gap-2 font-semibold text-gold-ink transition-[gap] hover:gap-3"
           >
             Read the coastal climate guide <ArrowRight className="size-4" />
           </Link>
@@ -321,7 +321,7 @@ async function LatestPosts() {
             Guides for owners <em>far from home.</em>
           </h2>
         </div>
-        <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-gold-ink">
+        <Link href="/blog" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-ink hover:text-gold-ink">
           All guides <ArrowRight className="size-4" />
         </Link>
       </div>
